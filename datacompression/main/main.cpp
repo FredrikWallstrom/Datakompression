@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "Entropy.h"
+#include "../entropy/Entropy.h"
 #include <stdio.h>
 #include <vector>
 #include <string>
