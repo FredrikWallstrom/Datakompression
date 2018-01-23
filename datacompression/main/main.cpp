@@ -8,7 +8,6 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-    printf("This program was called with \"%s\".\n", argv[0]);
 
     if (argc < 2) {
         printf("Please, enter an input file and I will estimate the entropy for that source.\nAlso enter "
@@ -21,9 +20,15 @@ int main(int argc, char *argv[]) {
 
 
     entropy ent;
-    char *byteArray = ent.readFile(inputFile);
-    map<char, int> freq = ent.calculateFreq(byteArray);
+    pair<char*, unsigned long> byteArrayPair = ent.readFile(inputFile);
+    cout << "The file size of requested file is:" << endl;
+    cout << byteArrayPair.second << " " << "Bytes." << endl;
 
-    cout << freq.size() << " " << freq.at('a') << endl;
+    map<char, double> probTable = ent.calculateProbability(byteArrayPair);
+
+    double entropy = ent.calculateEntropy(probTable);
+
+    cout << "The entropy of the requested file is:" << endl;
+    cout << "H(X) = " << entropy << endl;
     return 0;
 }

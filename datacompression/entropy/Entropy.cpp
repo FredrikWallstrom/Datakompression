@@ -7,10 +7,11 @@
 #include <fstream>      // std::ifstream
 #include <string>
 #include <map>
+#include <math.h>
 
 using namespace std;
 
-char * entropy::readFile(char *fileName) {
+pair<char*, unsigned long> entropy::readFile(char *fileName) {
     // Open a ifstream.
     ifstream ifs;
     ifs.open(fileName, ios::in|ios::binary|ios::ate);
@@ -26,21 +27,17 @@ char * entropy::readFile(char *fileName) {
         ifs.read(byteArray, length);
         byteArray[length] = '\0';
 
-        cout << "The file size of requested file is:" << endl;
-        cout << length << endl;
-
-        return byteArray;
+        return make_pair(byteArray, length);
     }
-    return nullptr;
+    return make_pair(nullptr, 0);
 }
 
-map<char, int> entropy::calculateFreq(const char *byteArray) {
+map<char, double> entropy::calculateProbability(pair<char*, unsigned long> byteArrayPair) {
 
     map<char, int> freqTable;
-
     int i = 0;
-    while(byteArray[i] != '\0'){
-        char byte = byteArray[i];
+    while(byteArrayPair.first[i] != '\0'){
+        char byte = byteArrayPair.first[i];
         map <char, int>::iterator iter ;
         iter = freqTable.find(byte) ;
 
@@ -50,5 +47,22 @@ map<char, int> entropy::calculateFreq(const char *byteArray) {
 
         i++;
     }
-    return freqTable;
+
+    map<char, double> probTable;
+    for (auto &it : freqTable) {
+        double prob = it.second / (double)byteArrayPair.second;
+        probTable[it.first] = prob;
+    }
+
+
+    return probTable;
+}
+
+double entropy::calculateEntropy(map<char, double> probTable) {
+    double entropy = 0.0;
+
+    for (auto &it : probTable) {
+        entropy += it.second * log2(it.second);
+    }
+    return entropy * -1;
 }

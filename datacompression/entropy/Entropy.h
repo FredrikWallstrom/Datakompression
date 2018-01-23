@@ -16,8 +16,10 @@ using namespace std;
 
 class entropy {
 public:
-    char *readFile(char *filename);
-    map<char, int> calculateFreq(const char *string);
+    pair<char*, unsigned long> readFile(char *filename);
+    map<char, double> calculateProbability(pair<char*, unsigned long> byteArrayPair);
+
+    double calculateEntropy(map<char, double> probTable);
 };
 
 
