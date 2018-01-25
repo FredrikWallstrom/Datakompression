@@ -49,6 +49,7 @@ int main(int argc, char *argv[]) {
     outfile << "Markov source of order k = 1:  " << "H(Xi|Xi-k) = " << order1 - order0 << endl;
     outfile << "Markov source of order k = 2:  " << "H(Xi|Xi-1, Xi-k) = " << order2 - order0 - (order1 - order0) << endl;
     outfile << endl;
-    
+
+    outfile.close();
     return 0;
 }
