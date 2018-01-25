@@ -11,58 +11,100 @@
 
 using namespace std;
 
-pair<char*, unsigned long> entropy::readFile(char *fileName) {
-    // Open a ifstream.
-    ifstream ifs;
-    ifs.open(fileName, ios::in|ios::binary|ios::ate);
 
-    if(ifs.is_open()) {
-        // Get the length of the file.
-        ifs.seekg(0, ios::end);
-        auto length = static_cast<size_t>(ifs.tellg());
-        ifs.seekg(0, ios::beg);
 
-        // Read the data.
-        auto * byteArray = new char[length + 1];
-        ifs.read(byteArray, length);
-        byteArray[length] = '\0';
+vector<char> entropy::readFile(char const *fileName) {
 
-        return make_pair(byteArray, length);
-    }
-    return make_pair(nullptr, 0);
+    // open the file
+    std::ifstream file;
+    file.open(fileName);
+
+
+    // get the length of the file
+    file.seekg(0, ios::end);
+    auto fileSize = static_cast<size_t>(file.tellg());
+    file.seekg(0, ios::beg);
+
+    // create a vector to hold all the bytes in the file
+    std::vector<char> data(fileSize, 0);
+
+    // read the file
+    file.read(&data[0], fileSize);
+
+    return data;
 }
 
-map<char, double> entropy::calculateProbability(pair<char*, unsigned long> byteArrayPair) {
-
-    map<char, int> freqTable;
-    int i = 0;
-    while(byteArrayPair.first[i] != '\0'){
-        char byte = byteArrayPair.first[i];
-        map <char, int>::iterator iter ;
-        iter = freqTable.find(byte) ;
-
-        // Check if character is in the map or not.
-        if (iter != freqTable.end()) iter->second += 1 ;
-        else freqTable[byte] = 1 ;
-
-        i++;
-    }
-
-    map<char, double> probTable;
-    for (auto &it : freqTable) {
-        double prob = it.second / (double)byteArrayPair.second;
-        probTable[it.first] = prob;
-    }
-
-
-    return probTable;
-}
-
-double entropy::calculateEntropy(map<char, double> probTable) {
+double entropy::calculateEntropy(vector<double> freqArray) {
     double entropy = 0.0;
+    for (double i : freqArray) {
+        if(i > 0) entropy -= i * log2(i);
 
-    for (auto &it : probTable) {
-        entropy += it.second * log2(it.second);
     }
-    return entropy * -1;
+    return entropy;
 }
+
+map<char, int> entropy::calcFreq(vector<char> byteArray) {
+    map<char, int> freq;
+
+    for (int j = 0; j < byteArray.size(); ++j) {
+        if (freq.find(byteArray[j]) == freq.end() ) {
+            // Not found.
+            freq[byteArray[j]] = 1;
+        } else {
+            // Found.
+            freq[byteArray[j]]++;
+        }
+    }
+    return freq;
+}
+
+map<char, int> entropy::calcDoubleFreq(vector<char> byteArray) {
+    map<char, int> doubleFreq;
+
+    for (int j = 0; j < byteArray.size(); ++j) {
+        if((j+1) >= byteArray.size()) continue;
+        char byte = byteArray[j] + byteArray[j+1];
+
+        if (doubleFreq.find(byte) == doubleFreq.end() ) {
+            // Not found.
+            doubleFreq[byte] = 1;
+        } else {
+            // Found.
+            doubleFreq[byte]++;
+        }
+    }
+    return doubleFreq;
+}
+
+map<char, int> entropy::calcTrippleFreq(vector<char> byteArray) {
+    map<char, int> trippleFreq;
+
+    for (int j = 0; j < byteArray.size(); ++j) {
+        if((j+2) >= byteArray.size()) continue;
+        char byte = byteArray[j] + byteArray[j+1] + byteArray[j+2];
+
+        if (trippleFreq.find(byte) == trippleFreq.end() ) {
+            // Not found.
+            trippleFreq[byte] = 1;
+        } else {
+            // Found.
+            trippleFreq[byte]++;
+        }
+    }
+    return trippleFreq;
+}
+
+vector<double> entropy::calcProb(map<char, int> freqArray, unsigned long length) {
+    vector<double> probArray;
+
+    for (map<char,int>::iterator it=freqArray.begin(); it!=freqArray.end(); ++it){
+        double prob = (double) it->second / (double)length;
+    //    cout << prob << endl;
+        probArray.push_back(prob);
+    }
+
+    return probArray;
+}
+
+
+

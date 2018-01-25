@@ -13,13 +13,17 @@
 
 using namespace std;
 
-
 class entropy {
 public:
-    pair<char*, unsigned long> readFile(char *filename);
-    map<char, double> calculateProbability(pair<char*, unsigned long> byteArrayPair);
+    vector<char> readFile(char const *filename);
+    map<char, int> calcFreq(vector<char> byteArray);
+    map<char, int> calcDoubleFreq(vector<char> byteArray);
+    double calculateEntropy(vector<double> freqArray);
 
-    double calculateEntropy(map<char, double> probTable);
+
+    map<char, int> calcTrippleFreq(vector<char> vector);
+
+    vector<double> calcProb(map<char, int> freqArray, unsigned long i);
 };
 
 
