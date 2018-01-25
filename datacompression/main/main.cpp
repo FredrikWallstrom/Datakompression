@@ -8,17 +8,7 @@
 
 using namespace std;
 
-int main(int argc, char *argv[]) {
-
-    if (argc < 3) {
-        printf("Please, enter an input file and I will estimate the entropy for that source.\nAlso enter "
-                       "an output file so I can store the result.\nCommand: ./yourprogram inputfile outputfile\n");
-        return 0;
-    }
-
-    char *inputFile = argv[1];
-
-    const char *outputFile = argv[2];
+void entropyEstimation(char *inputFile, char *outputFile){
     ofstream outfile;
     outfile.open(outputFile, std::ios_base::app);
 
@@ -26,7 +16,6 @@ int main(int argc, char *argv[]) {
     vector<char> byteArray = ent.readFile(inputFile);
     outfile << "The file size of " << inputFile  << " " <<  "is:" << endl;
     outfile << byteArray.size() << " " << "Bytes." << endl;
-
 
     map<char, int> freqArray = ent.calcFreq(byteArray);
     map<char, int> freqArrayDouble = ent.calcDoubleFreq(byteArray);
@@ -43,13 +32,27 @@ int main(int argc, char *argv[]) {
     outfile << "Markov source of order k = 0:  " << "H(Xi,...,Xi+k) = " << order0 << endl;
     outfile << "Markov source of order k = 1:  " << "H(Xi,...,Xi+k) = " << order1 << endl;
     outfile << "Markov source of order k = 2:  " << "H(Xi,...,Xi+k) = " << order2 << endl;
-
     outfile << "This gives:" << endl;
     outfile << "Markov source of order k = 0:  " << "H(Xi) = " << order0 << endl;
     outfile << "Markov source of order k = 1:  " << "H(Xi|Xi-k) = " << order1 - order0 << endl;
     outfile << "Markov source of order k = 2:  " << "H(Xi|Xi-1, Xi-k) = " << order2 - order0 - (order1 - order0) << endl;
     outfile << endl;
-
     outfile.close();
+}
+
+int main(int argc, char *argv[]) {
+
+    if(argc != 4){
+        printf("Instructions to run this program:\nStyle of input should be: ./yourprogram -flag inputfile outputfile\n"
+                       "Where the available flags is:\ne: Entropy estimation of inputfile, result is placed in outputfile"
+                       "\nhe: Encrypt your inputfile with huffman coding, resulting in outputfile"
+                       "\nhd: Decrypt your inputfile with huffman coding, resulting in outputfile");
+        return 0;
+    }
+
+    if(strncmp(argv[1], "-e", 2) == 0){
+        entropyEstimation(argv[2], argv[3]);
+    }
+
     return 0;
 }

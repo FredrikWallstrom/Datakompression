@@ -19,10 +19,7 @@ public:
     map<char, int> calcFreq(vector<char> byteArray);
     map<char, int> calcDoubleFreq(vector<char> byteArray);
     double calculateEntropy(vector<double> freqArray);
-
-
     map<char, int> calcTrippleFreq(vector<char> vector);
-
     vector<double> calcProb(map<char, int> freqArray, unsigned long i);
 };
 

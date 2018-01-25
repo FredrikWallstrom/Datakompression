@@ -4,33 +4,29 @@
 
 #include "Entropy.h"
 #include <iostream>
-#include <fstream>      // std::ifstream
+#include <fstream>
 #include <string>
 #include <map>
 #include <math.h>
 
 using namespace std;
 
-
-
 vector<char> entropy::readFile(char const *fileName) {
 
-    // open the file
+    // Open the file.
     std::ifstream file;
     file.open(fileName);
 
-
-    // get the length of the file
+    // Get the length of the file.
     file.seekg(0, ios::end);
     auto fileSize = static_cast<size_t>(file.tellg());
     file.seekg(0, ios::beg);
 
-    // create a vector to hold all the bytes in the file
+    // Create a vector to hold all the bytes in the file.
     std::vector<char> data(fileSize, 0);
 
-    // read the file
+    // Read the file
     file.read(&data[0], fileSize);
-
     return data;
 }
 
