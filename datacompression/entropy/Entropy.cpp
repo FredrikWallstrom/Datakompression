@@ -11,6 +11,39 @@
 
 using namespace std;
 
+map<int, double> entropy::calculateFrequency(char *fileName) {
+    // Open the file.
+    ifstream file;
+    file.open(fileName, ios::in|ios::binary|ios::ate);
+
+    // Get the length of the file.
+    file.seekg(0, ios::end);
+    auto fileSize = static_cast<size_t>(file.tellg());
+    file.seekg(0, ios::beg);
+    cout << "The length of the requested file is: " << fileSize << " " << "bytes" << endl;
+
+    // Calculate the frequency.
+    map<int, int> frequencyTable;
+    int c;
+    while(true){
+        c = file.get();
+        if(c == EOF){
+            break;
+        }
+        frequencyTable[c]++;
+    }
+
+    // Close the file.
+    file.close();
+
+    // Calculate the probability.
+    map<int, double> probabilityTable;
+    for (auto &it : frequencyTable) {
+        probabilityTable[it.first] = it.second/fileSize;
+    }
+    return probabilityTable;
+}
+
 vector<char> entropy::readFile(char const *fileName) {
 
     // Open the file.
@@ -30,13 +63,17 @@ vector<char> entropy::readFile(char const *fileName) {
     return data;
 }
 
-double entropy::calculateEntropy(vector<double> freqArray) {
+void entropy::calculateEntropy(char *fileName, char *outputFile) {
+    map<int, double> probabilityTable = calculateFrequency(fileName);
+
+
     double entropy = 0.0;
-    for (double i : freqArray) {
-        if(i > 0) entropy -= i * log2(i);
+    for (auto &it : probabilityTable) {
+        entropy -= it.second * log2(it.second);
 
     }
-    return entropy;
+    cout << "Entropy: " << endl;
+    cout << "Markov source of order k = 0: H(Xi,...,Xi+k) = " << entropy << endl;
 }
 
 map<char, int> entropy::calcFreq(vector<char> byteArray) {
@@ -95,7 +132,6 @@ vector<double> entropy::calcProb(map<char, int> freqArray, unsigned long length)
 
     for (map<char,int>::iterator it=freqArray.begin(); it!=freqArray.end(); ++it){
         double prob = (double) it->second / (double)length;
-    //    cout << prob << endl;
         probArray.push_back(prob);
     }
 

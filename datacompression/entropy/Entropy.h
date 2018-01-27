@@ -18,9 +18,11 @@ public:
     vector<char> readFile(char const *filename);
     map<char, int> calcFreq(vector<char> byteArray);
     map<char, int> calcDoubleFreq(vector<char> byteArray);
-    double calculateEntropy(vector<double> freqArray);
+    double calculateEntropy(char* fileName, char *outputFile);
     map<char, int> calcTrippleFreq(vector<char> vector);
     vector<double> calcProb(map<char, int> freqArray, unsigned long i);
+
+    map<int, double> calculateFrequency(char *fileName);
 };
 
 

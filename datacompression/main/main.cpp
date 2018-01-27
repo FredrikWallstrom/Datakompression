@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "../entropy/Entropy.h"
+#include "../huffman/Huffman.h"
 #include <stdio.h>
 #include <vector>
 #include <string>
@@ -8,10 +9,30 @@
 
 using namespace std;
 
-void entropyEstimation(char *inputFile, char *outputFile){
-    ofstream outfile;
-    outfile.open(outputFile, std::ios_base::app);
+void huffmanCoding(char *inputFile, char *outputFile, string code){
+//    ofstream outfile;
+//    outfile.open(outputFile, std::ios_base::app);
 
+
+    Huffman huffman;
+    if(code == "Encode"){
+        huffman.encode(inputFile);
+    }else{
+
+    }
+}
+
+void entropyEstimation(char *inputFile, char *outputFile){
+  //  ofstream outfile;
+  //  outfile.open(outputFile, std::ios_base::app);
+
+
+
+    entropy ent;
+    ent.calculateEntropy(inputFile, outputFile);
+
+
+/*
     entropy ent;
     vector<char> byteArray = ent.readFile(inputFile);
     outfile << "The file size of " << inputFile  << " " <<  "is:" << endl;
@@ -38,20 +59,25 @@ void entropyEstimation(char *inputFile, char *outputFile){
     outfile << "Markov source of order k = 2:  " << "H(Xi|Xi-1, Xi-k) = " << order2 - order0 - (order1 - order0) << endl;
     outfile << endl;
     outfile.close();
+    */
 }
 
 int main(int argc, char *argv[]) {
-
     if(argc != 4){
         printf("Instructions to run this program:\nStyle of input should be: ./yourprogram -flag inputfile outputfile\n"
                        "Where the available flags is:\ne: Entropy estimation of inputfile, result is placed in outputfile"
-                       "\nhe: Encrypt your inputfile with huffman coding, resulting in outputfile"
+                       "\nhe: Encrypt your inputfile with huffman coding, resulting in outputfile."
+                       "\nhd: Decrypt your huffmanfile to normal file, resulting in outputfile.\""
                        "\nhd: Decrypt your inputfile with huffman coding, resulting in outputfile");
         return 0;
     }
 
+
     if(strncmp(argv[1], "-e", 2) == 0){
         entropyEstimation(argv[2], argv[3]);
+    }
+    if(strncmp(argv[1], "-he", 2) == 0) {
+        huffmanCoding(argv[2], argv[3], "Encode");
     }
 
     return 0;
