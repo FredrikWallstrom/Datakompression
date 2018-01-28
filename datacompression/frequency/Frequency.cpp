@@ -1,0 +1,108 @@
+//
+// Created by Fredrik Wallström on 2018-01-28.
+//
+
+#include "Frequency.h"
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <map>
+#include <math.h>
+
+pair<int, map<int, double> > Frequency::calculateFrequency(char *fileName) {
+    // Open the file.
+    ifstream file;
+    file.open(fileName, ios::in|ios::binary|ios::ate);
+
+    // Get the length of the file.
+    file.seekg(0, ios::end);
+    auto fileSize = static_cast<size_t>(file.tellg());
+    file.seekg(0, ios::beg);
+
+    // Calculate the frequency.
+    map<int, int> frequencyTable;
+    int c;
+    while(true){
+        c = file.get();
+        if(c == EOF) break;
+        frequencyTable[c]++;
+    }
+
+    // Close the file.
+    file.close();
+
+    // Calculate the probability.
+    map<int, double> probabilityTable;
+    for (auto &it : frequencyTable) {
+        probabilityTable[it.first] = static_cast<double>(it.second)/static_cast<double>(fileSize);
+    }
+    return make_pair(fileSize, probabilityTable);
+}
+
+map<int, double> Frequency::calculateFrequencyPairs(char *fileName) {
+    // Open the file.
+    ifstream file;
+    file.open(fileName, ios::in|ios::binary|ios::ate);
+    // Get the length of the file.
+    file.seekg(0, ios::end);
+    auto fileSize = static_cast<size_t>(file.tellg());
+
+    // Calculate the frequency of pairs.
+    map<int, int> frequencyTable;
+    int c1;
+    int c2;
+    int pos = 0;
+    while(true){
+        file.seekg(pos, ios::beg);
+        c1 = file.get();
+        c2 = file.get();
+        if(c1 == EOF || c2 == EOF) break;
+        int c = c1 + c2;
+        frequencyTable[c]++;
+        pos++;
+    }
+    // Close the file.
+    file.close();
+
+    // Calculate the probability.
+    map<int, double> probabilityTable;
+    for (auto &it : frequencyTable) {
+        probabilityTable[it.first] = static_cast<double>(it.second)/static_cast<double>(fileSize);
+    }
+    return probabilityTable;
+}
+
+map<int, double> Frequency::calculateFrequencyTripples(char *fileName) {
+    // Open the file.
+    ifstream file;
+    file.open(fileName, ios::in|ios::binary|ios::ate);
+    // Get the length of the file.
+    file.seekg(0, ios::end);
+    auto fileSize = static_cast<size_t>(file.tellg());
+
+    // Calculate the frequency of pairs.
+    map<int, int> frequencyTable;
+    int c1;
+    int c2;
+    int c3;
+    int pos = 0;
+    while(true){
+        file.seekg(pos, ios::beg);
+        c1 = file.get();
+        c2 = file.get();
+        c3 = file.get();
+        if(c1 == EOF || c2 == EOF || c3 == EOF) break;
+        int c = c1 + c2 + c3;
+        frequencyTable[c]++;
+        pos++;
+    }
+    // Close the file.
+    file.close();
+
+    // Calculate the probability.
+    map<int, double> probabilityTable;
+    for (auto &it : frequencyTable) {
+        probabilityTable[it.first] = static_cast<double>(it.second)/static_cast<double>(fileSize);
+    }
+    return probabilityTable;
+}

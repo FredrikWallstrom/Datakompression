@@ -1,1 +1,1 @@
-aabbbcccc
+Huffman coding is a data compression algorithm.

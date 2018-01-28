@@ -10,13 +10,28 @@
 
 using namespace std;
 
+struct Node{
+    int ch;
+    double prob;
+    Node *left, *right;
+};
+
 class Huffman {
 public:
-    void encode(char* filename);
+    void compress(char* filename, char* outputFile);
 
-    void buildTree(map<int, double> map);
+    Node* buildTree(map<int, double> map);
 
-    map<int, double> calculateFrequency(char *fileName);
+    string encodeData(char *fileName, const map<int, string> &encodingMap, char *output);
+
+    void writeResult(char *fileName, char *outputFile, string encodedString, int length, double rate, int nrOfSymbols);
+
+    double calculateAverageNumberOfBitsPerCodeword(map<int, string> encodingMap, map<int, double> probabilityTable);
+
+    void freeTree(Node *node);
+
+    string encodeDataPair(char *name, map<int, string> map);
+
 };
 
 

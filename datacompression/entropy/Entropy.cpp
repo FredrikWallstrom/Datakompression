@@ -3,6 +3,7 @@
 //
 
 #include "Entropy.h"
+#include "../frequency/Frequency.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -11,132 +12,41 @@
 
 using namespace std;
 
-map<int, double> entropy::calculateFrequency(char *fileName) {
-    // Open the file.
-    ifstream file;
-    file.open(fileName, ios::in|ios::binary|ios::ate);
+void Entropy::entropy(char *fileName, char *outputFile) {
+    Frequency freq;
+    pair<int, map<int, double> > probabilityPair = freq.calculateFrequency(fileName);
+    double entropyK0 = calculateEntropy(probabilityPair.second);
 
-    // Get the length of the file.
-    file.seekg(0, ios::end);
-    auto fileSize = static_cast<size_t>(file.tellg());
-    file.seekg(0, ios::beg);
-    cout << "The length of the requested file is: " << fileSize << " " << "bytes" << endl;
+    map<int, double> probabilityTable = freq.calculateFrequencyPairs(fileName);
+    double entropyK1 = calculateEntropy(probabilityTable);
 
-    // Calculate the frequency.
-    map<int, int> frequencyTable;
-    int c;
-    while(true){
-        c = file.get();
-        if(c == EOF){
-            break;
-        }
-        frequencyTable[c]++;
-    }
+    probabilityTable = freq.calculateFrequencyTripples(fileName);
+    double entropyK2 = calculateEntropy(probabilityTable);
 
-    // Close the file.
-    file.close();
-
-    // Calculate the probability.
-    map<int, double> probabilityTable;
-    for (auto &it : frequencyTable) {
-        probabilityTable[it.first] = it.second/fileSize;
-    }
-    return probabilityTable;
+    writeToFile(fileName, outputFile, probabilityPair.first, entropyK0, entropyK1, entropyK2);
 }
 
-vector<char> entropy::readFile(char const *fileName) {
-
-    // Open the file.
-    std::ifstream file;
-    file.open(fileName);
-
-    // Get the length of the file.
-    file.seekg(0, ios::end);
-    auto fileSize = static_cast<size_t>(file.tellg());
-    file.seekg(0, ios::beg);
-
-    // Create a vector to hold all the bytes in the file.
-    std::vector<char> data(fileSize, 0);
-
-    // Read the file
-    file.read(&data[0], fileSize);
-    return data;
-}
-
-void entropy::calculateEntropy(char *fileName, char *outputFile) {
-    map<int, double> probabilityTable = calculateFrequency(fileName);
-
-
+double Entropy::calculateEntropy(map<int, double> probabilityTable) {
     double entropy = 0.0;
-    for (auto &it : probabilityTable) {
-        entropy -= it.second * log2(it.second);
-
-    }
-    cout << "Entropy: " << endl;
-    cout << "Markov source of order k = 0: H(Xi,...,Xi+k) = " << entropy << endl;
+    for (auto &it : probabilityTable) entropy -= it.second * (log(it.second)/log(2.0));
+    return entropy;
 }
 
-map<char, int> entropy::calcFreq(vector<char> byteArray) {
-    map<char, int> freq;
-
-    for (int j = 0; j < byteArray.size(); ++j) {
-        if (freq.find(byteArray[j]) == freq.end() ) {
-            // Not found.
-            freq[byteArray[j]] = 1;
-        } else {
-            // Found.
-            freq[byteArray[j]]++;
-        }
-    }
-    return freq;
+void Entropy::writeToFile(char *fileName, char *outputFile, int length, double k0, double k1, double k2) {
+    ofstream outfile;
+    outfile.open(outputFile, std::ios_base::app);
+    outfile << "The file size of " << fileName  << " " <<  "is:" << endl;
+    outfile << length << " " << "Bytes." << endl;
+    outfile << "The entropy is:" << endl;
+    outfile << "Markov source of order k = 0:  " << "H(Xi,...,Xi+k) = " << k0 << endl;
+    outfile << "Markov source of order k = 1:  " << "H(Xi,...,Xi+k) = " << k1 << endl;
+    outfile << "Markov source of order k = 2:  " << "H(Xi,...,Xi+k) = " << k2 << endl;
+    outfile << "This gives:" << endl;
+    outfile << "Markov source of order k = 0:  " << "H(Xi) = " << k0 << endl;
+    outfile << "Markov source of order k = 1:  " << "H(Xi|Xi-k) = " << k1 - k0 << endl;
+    outfile << "Markov source of order k = 2:  " << "H(Xi|Xi-1, Xi-k) = " << k2 - k0 - (k1 - k0) << endl;
+    outfile << endl;
+    outfile.close();
 }
-
-map<char, int> entropy::calcDoubleFreq(vector<char> byteArray) {
-    map<char, int> doubleFreq;
-
-    for (int j = 0; j < byteArray.size(); ++j) {
-        if((j+1) >= byteArray.size()) continue;
-        char byte = byteArray[j] + byteArray[j+1];
-
-        if (doubleFreq.find(byte) == doubleFreq.end() ) {
-            // Not found.
-            doubleFreq[byte] = 1;
-        } else {
-            // Found.
-            doubleFreq[byte]++;
-        }
-    }
-    return doubleFreq;
-}
-
-map<char, int> entropy::calcTrippleFreq(vector<char> byteArray) {
-    map<char, int> trippleFreq;
-
-    for (int j = 0; j < byteArray.size(); ++j) {
-        if((j+2) >= byteArray.size()) continue;
-        char byte = byteArray[j] + byteArray[j+1] + byteArray[j+2];
-
-        if (trippleFreq.find(byte) == trippleFreq.end() ) {
-            // Not found.
-            trippleFreq[byte] = 1;
-        } else {
-            // Found.
-            trippleFreq[byte]++;
-        }
-    }
-    return trippleFreq;
-}
-
-vector<double> entropy::calcProb(map<char, int> freqArray, unsigned long length) {
-    vector<double> probArray;
-
-    for (map<char,int>::iterator it=freqArray.begin(); it!=freqArray.end(); ++it){
-        double prob = (double) it->second / (double)length;
-        probArray.push_back(prob);
-    }
-
-    return probArray;
-}
-
 
 
