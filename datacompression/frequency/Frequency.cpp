@@ -51,14 +51,14 @@ map<int, double> Frequency::calculateFrequencyPairs(char *fileName) {
     map<int, int> frequencyTable;
     int c1;
     int c2;
-    int pos = 0;
+    long int pos = 0;
     while(true){
         file.seekg(pos, ios::beg);
         c1 = file.get();
         c2 = file.get();
         if(c1 == EOF || c2 == EOF) break;
-        int c = c1 + c2;
-        frequencyTable[c]++;
+        int number = c1 << 8 | c2;
+        frequencyTable[number]++;
         pos++;
     }
     // Close the file.
@@ -66,9 +66,10 @@ map<int, double> Frequency::calculateFrequencyPairs(char *fileName) {
 
     // Calculate the probability.
     map<int, double> probabilityTable;
-    for (auto &it : frequencyTable) {
+      for (auto &it : frequencyTable) {
         probabilityTable[it.first] = static_cast<double>(it.second)/static_cast<double>(fileSize);
     }
+
     return probabilityTable;
 }
 
@@ -92,8 +93,9 @@ map<int, double> Frequency::calculateFrequencyTripples(char *fileName) {
         c2 = file.get();
         c3 = file.get();
         if(c1 == EOF || c2 == EOF || c3 == EOF) break;
-        int c = c1 + c2 + c3;
-        frequencyTable[c]++;
+        int n1 = c1 << 8 | c2;
+        int n2 = n1 << 8 | c3;
+        frequencyTable[n2]++;
         pos++;
     }
     // Close the file.

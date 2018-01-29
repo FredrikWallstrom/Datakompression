@@ -20,8 +20,8 @@ void Entropy::entropy(char *fileName, char *outputFile) {
     map<int, double> probabilityTable = freq.calculateFrequencyPairs(fileName);
     double entropyK1 = calculateEntropy(probabilityTable);
 
-    probabilityTable = freq.calculateFrequencyTripples(fileName);
-    double entropyK2 = calculateEntropy(probabilityTable);
+    map<int, double> test = freq.calculateFrequencyTripples(fileName);
+    double entropyK2 = calculateEntropy(test);
 
     writeToFile(fileName, outputFile, probabilityPair.first, entropyK0, entropyK1, entropyK2);
 }

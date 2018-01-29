@@ -172,13 +172,18 @@ void Huffman::compress(char *fileName, char *outputFile) {
 
     Frequency freq;
 
-    pair<int, map<int, double> > probabilityPair = freq.calculateFrequency(fileName);
 
+    pair<int, map<int, double> > probabilityPair = freq.calculateFrequency(fileName);
+/*
     Node *root = buildTree(probabilityPair.second);
 
     // Go through the tree and store the Huffman codes in a map.
     map<int, string> encodingMap;
     buildEncodingMap(root, encodingMap, "");
+
+    for(auto it:encodingMap){
+        cout << it.first << " " << it.second << endl;
+    }
 
     string encodedFile = encodeData(fileName, encodingMap, outputFile);
     double anobpc = calculateAverageNumberOfBitsPerCodeword(encodingMap, probabilityPair.second);
@@ -196,14 +201,19 @@ void Huffman::compress(char *fileName, char *outputFile) {
     map<int, string> testMap;
     buildEncodingMap(root1, testMap, "");
 
+    for(auto it:testMap){
+        cout << it.first << " " << it.second << endl;
+    }
+
     string test = encodeDataPair(fileName, testMap);
-    anobpc = calculateAverageNumberOfBitsPerCodeword(testMap, probabilityTable);
-    rate = anobpc/2.0;
+    double anobpc = calculateAverageNumberOfBitsPerCodeword(testMap, probabilityTable);
+    double rate = anobpc/2.0;
     writeResult(fileName, outputFile, test, probabilityPair.first, rate, 2);
 
 
     freeTree(root1);
 
+ */
 }
 
 
