@@ -103,9 +103,9 @@ string Huffman::encodeData(char *fileName, const map<int, string> &encodingMap) 
 
 void Huffman::writeResult(char* fileName, char* outputFile, size_t length, string &encodedStringOneSymbol, double rateOneSymbol, string header){
     auto lengthBit = static_cast<double>(length*8);
-    auto lengthEncodedStringOneSymbol = static_cast<double>(encodedStringOneSymbol.size());
+    auto lengthEncodedString = static_cast<double>(encodedStringOneSymbol.size());
     auto lengthHeader = static_cast<double>(header.size()*8);
-    double lengthHuffmanCode = lengthHeader+lengthEncodedStringOneSymbol;
+    double lengthHuffmanCode = lengthHeader+lengthEncodedString;
 
     ofstream outfile;
     outfile.open(outputFile, std::ios_base::app);
@@ -159,9 +159,72 @@ string Huffman::buildHeader(map<int, int> &freqTable){
         header += to_string(it.first);
         header += ':';
         header += to_string(it.second);
+        header += ' ';
     }
     header += '}';
     return header;
+}
+
+map<int, int> Huffman::readHeader(ifstream &file)
+{
+    map<int, int> freqTable;
+    string letter;
+    string freq;
+    int character;
+    bool afterColon  = false;
+
+    while(true){
+        character = file.get();
+        if(character == '}'){
+            break;
+        }else if(character == ' '){
+            freqTable[stoi(letter)] = stoi(freq);
+            freq = "";
+            letter = "";
+            afterColon = false;
+        }else if(character == ':'){
+            afterColon = true;
+        }else{
+            if(afterColon){
+                freq += to_string(character);
+            }else{
+                letter += to_string(character);
+            }
+        }
+    }
+
+    return freqTable;
+}
+
+
+int decodeDataHelper(ifstream &input, Node *root) {
+    if(!root->left && !root->right){
+        return root->ch;
+    }
+    else{
+        char bit = input.get();
+
+        if (bit == 1){
+            decodeDataHelper(input, root->left);
+        }else if(bit == 0){
+            decodeDataHelper(input, root->right);
+        }
+    }
+}
+
+
+string decodeData(ifstream &input, Node* encodingTree) {
+    string res;
+    while(true){
+        int result = decodeDataHelper(input, encodingTree);
+        if (result == EOF){
+            break;
+        }else{
+            res += result;
+        }
+    }
+    return res;
+
 }
 
 void Huffman::compress(char *fileName, char *outputFile) {
@@ -178,14 +241,40 @@ void Huffman::compress(char *fileName, char *outputFile) {
     // Go through the file and encode the symbols with its corresponding code in the encoding map.
     string encodedFile = encodeData(fileName, encodingMap);
 
- //   writeToFile(outputFile, probabilityPair.second, encodedFile);
-    double rate = calculateAverageNumberOfBitsPerCodeword(encodingMap, probabilityTable);
+    // Write the result as strings to the output file.
+    writeToFile(outputFile, probabilityTable, encodedFile, header);
     freeTree(root);
-    writeResult(fileName, outputFile, freqTable.first, encodedFile, rate, header);
+
+    // Only using this for the report. Show the rate and how much we can compress a single file.
+ //   double rate = calculateAverageNumberOfBitsPerCodeword(encodingMap, probabilityTable);
+ //   writeResult(fileName, outputFile, freqTable.first, encodedFile, rate, header);
 }
 
 void Huffman::decompress(char *fileName, char *outputFile){
+    // Open the file.
+    ifstream file;
+    file.open(fileName, ios::in|ios::binary|ios::ate);
+    file.seekg(0, ios::beg);
 
+    map<int, int> freqTable = readHeader(file);
+
+    // Calculate the length of the encoded file
+    int pos = file.tellg();
+    file.seekg(0, ios::end);
+    int current = file.tellg();
+    int length = current - pos;
+    file.seekg(pos, ios::beg);
+
+    Frequency freq;
+    map<int, double> probabilityTable = freq.calculateProbability(freqTable, reinterpret_cast<size_t &>(length));
+    Node* root = buildTree(probabilityTable);
+    string decodedFile = decodeData(file, root);
+    cout << decodedFile << endl;
+    freeTree(root);
+
+
+    // Close the file.
+    file.close();
 }
 
 

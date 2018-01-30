@@ -42,9 +42,6 @@ map<int, int> Frequency::calculateFrequencyPairs(char *fileName) {
     // Open the file.
     ifstream file;
     file.open(fileName, ios::in|ios::binary|ios::ate);
-    // Get the length of the file.
-    file.seekg(0, ios::end);
-    auto fileSize = static_cast<size_t>(file.tellg());
 
     // Calculate the frequency of pairs.
     map<int, int> frequencyTable;
@@ -70,9 +67,6 @@ map<int, int> Frequency::calculateFrequencyTripples(char *fileName) {
     // Open the file.
     ifstream file;
     file.open(fileName, ios::in|ios::binary|ios::ate);
-    // Get the length of the file.
-    file.seekg(0, ios::end);
-    auto fileSize = static_cast<size_t>(file.tellg());
 
     // Calculate the frequency of pairs.
     map<int, int> frequencyTable;

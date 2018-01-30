@@ -6,6 +6,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <string>
 
 using namespace std;
 
@@ -13,8 +14,8 @@ void huffmanCoding(char *inputFile, char *outputFile, string code){
     Huffman huffman;
     if(code == "Encode"){
         huffman.compress(inputFile, outputFile);
-    }else{
-
+    }else if(code == "Decode"){
+        huffman.decompress(inputFile, outputFile);
     }
 }
 
@@ -32,12 +33,16 @@ int main(int argc, char *argv[]) {
         return 0;
     }
 
-    if(strncmp(argv[1], "-e", 2) == 0){
+
+
+    if(string(argv[1]) == "-e"){
         entropyEstimation(argv[2], argv[3]);
     }
-    if(strncmp(argv[1], "-h", 2) == 0) {
+    else if(string(argv[1]) == "-he") {
         huffmanCoding(argv[2], argv[3], "Encode");
     }
-
+    else if(string(argv[1]) == "-hd") {
+        huffmanCoding(argv[2], argv[3], "Decode");
+    }
     return 0;
 }

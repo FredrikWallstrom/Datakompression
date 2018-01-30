@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <map>
+#include <fstream>
 
 using namespace std;
 
@@ -35,6 +36,8 @@ public:
     void decompress(char *fileName, char *outputFile);
 
     string buildHeader(map<int, int> &freqTable);
+
+    map<int, int> readHeader(ifstream &inputfile);
 };
 
 
