@@ -22,16 +22,19 @@ public:
 
     Node* buildTree(map<int, double> map);
 
-    string encodeData(char *fileName, const map<int, string> &encodingMap, char *output);
+    string encodeData(char *fileName, const map<int, string> &encodingMap);
 
-    void writeResult(char *fileName, char *outputFile, string encodedString, int length, double rate, int nrOfSymbols);
+    void writeResult(char *fileName, char *outputFile, int length, string &encodedStringOneSymbol, double rateOneSymbol,
+    string &encodedStringTwoSymbols, double rateTwoSymbols,
+                     string &encodedStringThreeSymbols, double rateThreeSymbols);
 
-    double calculateAverageNumberOfBitsPerCodeword(map<int, string> encodingMap, map<int, double> probabilityTable);
+    double calculateAverageNumberOfBitsPerCodeword(map<int, string> &encodingMap, map<int, double> &probabilityTable);
 
     void freeTree(Node *node);
 
     string encodeDataPair(char *name, map<int, string> map);
 
+    string encodeDataTripples(char *fileName, map<int, string> encodingMap);
 };
 
 

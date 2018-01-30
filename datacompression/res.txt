@@ -1,0 +1,26 @@
+The file size of sources/testsource.txt is:
+47 Bytes.
+The entropy is:
+k = 0:  H(Xi,...,Xi+k) = 4.07833
+k = 1:  H(Xi,...,Xi+k) = 5.22364
+k = 2:  H(Xi,...,Xi+k) = 5.27567
+The chain rule gives the conditional entropys:
+k = 0:  H(Xi) = 4.07833
+k = 1:  H(Xi|Xi-k) = 1.14531
+k = 2:  H(Xi|Xi-1, Xi-k) = 0.05203
+
+The file size of sources/alice29.txt is:
+152089 Bytes = 1.21671e+06 Bits.
+Coding with 1 symbols at a time:
+Length: 701502
+Compression rate: 42.3444%
+Rate: 4.61244
+Coding with 2 symbols at a time:
+Length: 1.21896e+06
+Compression rate: -0.184842%
+Rate: 4.00739
+Coding with 3 symbols at a time:
+Length: 1.59714e+06
+Compression rate: -31.2666%
+Rate: 3.50044
+
