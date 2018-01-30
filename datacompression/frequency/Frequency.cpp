@@ -13,7 +13,7 @@ map<int, double> Frequency::calculateProbability(map<int, int> &frequencyTable, 
     return probabilityTable;
 }
 
-pair<int, map<int, double> > Frequency::calculateFrequency(char *fileName) {
+pair<int, map<int, int> > Frequency::calculateFrequency(char *fileName) {
     // Open the file.
     ifstream file;
     file.open(fileName, ios::in|ios::binary|ios::ate);
@@ -35,12 +35,10 @@ pair<int, map<int, double> > Frequency::calculateFrequency(char *fileName) {
     // Close the file.
     file.close();
 
-    // Calculate the probability.
-    map<int, double> probabilityTable = calculateProbability(frequencyTable, fileSize);
-    return make_pair(fileSize, probabilityTable);
+    return make_pair(fileSize, frequencyTable);
 }
 
-map<int, double> Frequency::calculateFrequencyPairs(char *fileName) {
+map<int, int> Frequency::calculateFrequencyPairs(char *fileName) {
     // Open the file.
     ifstream file;
     file.open(fileName, ios::in|ios::binary|ios::ate);
@@ -65,12 +63,10 @@ map<int, double> Frequency::calculateFrequencyPairs(char *fileName) {
     // Close the file.
     file.close();
 
-    // Calculate the probability.
-    map<int, double> probabilityTable = calculateProbability(frequencyTable, fileSize);
-    return probabilityTable;
+    return frequencyTable;
 }
 
-map<int, double> Frequency::calculateFrequencyTripples(char *fileName) {
+map<int, int> Frequency::calculateFrequencyTripples(char *fileName) {
     // Open the file.
     ifstream file;
     file.open(fileName, ios::in|ios::binary|ios::ate);
@@ -97,8 +93,5 @@ map<int, double> Frequency::calculateFrequencyTripples(char *fileName) {
     }
     // Close the file.
     file.close();
-
-    // Calculate the probability.
-    map<int, double> probabilityTable = calculateProbability(frequencyTable, fileSize);
-    return probabilityTable;
+    return frequencyTable;
 }

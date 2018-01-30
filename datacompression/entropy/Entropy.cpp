@@ -14,16 +14,20 @@ using namespace std;
 
 void Entropy::entropy(char *fileName, char *outputFile) {
     Frequency freq;
-    pair<int, map<int, double> > probabilityPair = freq.calculateFrequency(fileName);
-    double entropyK0 = calculateEntropy(probabilityPair.second);
+    pair<size_t , map<int, int> > freqTable = freq.calculateFrequency(fileName);
+    size_t fileLength = freqTable.first;
+    map<int, double> probabilityTable = freq.calculateProbability(freqTable.second, fileLength);
+    double entropyK0 = calculateEntropy(probabilityTable);
 
-    map<int, double> probabilityTable = freq.calculateFrequencyPairs(fileName);
-    double entropyK1 = calculateEntropy(probabilityTable);
+    map<int, int> freqTablePair = freq.calculateFrequencyPairs(fileName);
+    map<int, double> probabilityTablePair = freq.calculateProbability(freqTablePair, fileLength);
+    double entropyK1 = calculateEntropy(probabilityTablePair);
 
-    map<int, double> test = freq.calculateFrequencyTripples(fileName);
-    double entropyK2 = calculateEntropy(test);
+    map<int, int> freqTableTripple = freq.calculateFrequencyTripples(fileName);
+    map<int, double> probabilityTableTripple = freq.calculateProbability(freqTableTripple, fileLength);
+    double entropyK2 = calculateEntropy(probabilityTableTripple);
 
-    writeToFile(fileName, outputFile, probabilityPair.first, entropyK0, entropyK1, entropyK2);
+    writeToFile(fileName, outputFile, fileLength, entropyK0, entropyK1, entropyK2);
 }
 
 double Entropy::calculateEntropy(map<int, double> probabilityTable) {

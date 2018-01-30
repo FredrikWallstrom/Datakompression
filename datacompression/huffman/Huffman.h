@@ -24,11 +24,17 @@ public:
 
     string encodeData(char *fileName, const map<int, string> &encodingMap);
 
-    void writeResult(char *fileName, char *outputFile, int length, string &encodedStringOneSymbol, double rateOneSymbol);
+    void writeResult(char *fileName, char *outputFile, size_t length, string &encodedStringOneSymbol, double rateOneSymbol, string header);
 
     double calculateAverageNumberOfBitsPerCodeword(map<int, string> &encodingMap, map<int, double> &probabilityTable);
 
     void freeTree(Node *node);
+
+    void writeToFile(char *outputFile, map<int, double> &freqTable, string &encodedFile, string header);
+
+    void decompress(char *fileName, char *outputFile);
+
+    string buildHeader(map<int, int> &freqTable);
 };
 
 

@@ -101,9 +101,11 @@ string Huffman::encodeData(char *fileName, const map<int, string> &encodingMap) 
     return result;
 }
 
-void Huffman::writeResult(char* fileName, char* outputFile, int length, string &encodedStringOneSymbol, double rateOneSymbol){
+void Huffman::writeResult(char* fileName, char* outputFile, size_t length, string &encodedStringOneSymbol, double rateOneSymbol, string header){
     auto lengthBit = static_cast<double>(length*8);
     auto lengthEncodedStringOneSymbol = static_cast<double>(encodedStringOneSymbol.size());
+    auto lengthHeader = static_cast<double>(header.size()*8);
+    double lengthHuffmanCode = lengthHeader+lengthEncodedStringOneSymbol;
 
     ofstream outfile;
     outfile.open(outputFile, std::ios_base::app);
@@ -112,8 +114,8 @@ void Huffman::writeResult(char* fileName, char* outputFile, int length, string &
     outfile << length << " " << "Bytes = " << lengthBit << " Bits." << endl;
 
     outfile << "Huffman coding with 1 symbols at a time:" << endl;
-    outfile << "Length: " << lengthEncodedStringOneSymbol << " Bits" << endl;
-    outfile << "Compression rate: " << (1 - lengthEncodedStringOneSymbol/lengthBit) * 100 << "%" << endl;
+    outfile << "Length: " << lengthHuffmanCode << " Bits" << endl;
+    outfile << "Compression rate: " << (1 - lengthHuffmanCode/lengthBit) * 100 << "%" << endl;
     outfile << "Rate: " << rateOneSymbol << " Bits/Symbol" << endl;
 
     outfile << endl;
@@ -143,19 +145,47 @@ void Huffman::freeTree(Node* node) {
     }
 }
 
+void Huffman::writeToFile(char *outputFile, map<int, double> &freqTable, string &encodedFile, string header){
+    ofstream outfile;
+    outfile.open(outputFile, std::ios_base::app);
+    outfile << header;
+    outfile << encodedFile;
+    outfile.close();
+}
+
+string Huffman::buildHeader(map<int, int> &freqTable){
+    string header;
+    for(auto it: freqTable){
+        header += to_string(it.first);
+        header += ':';
+        header += to_string(it.second);
+    }
+    header += '}';
+    return header;
+}
+
 void Huffman::compress(char *fileName, char *outputFile) {
     Frequency freq;
 
-    pair<int, map<int, double> > probabilityPair = freq.calculateFrequency(fileName);
-    Node *root = buildTree(probabilityPair.second);
+    pair<size_t, map<int, int> > freqTable = freq.calculateFrequency(fileName);
+    string header = buildHeader(freqTable.second);
+
+    map<int, double> probabilityTable = freq.calculateProbability(freqTable.second, freqTable.first);
+    Node *root = buildTree(probabilityTable);
     // Go through the tree and store the Huffman codes in a map.
     map<int, string> encodingMap;
     buildEncodingMap(root, encodingMap, "");
     // Go through the file and encode the symbols with its corresponding code in the encoding map.
     string encodedFile = encodeData(fileName, encodingMap);
-    double rate = calculateAverageNumberOfBitsPerCodeword(encodingMap, probabilityPair.second);
+
+ //   writeToFile(outputFile, probabilityPair.second, encodedFile);
+    double rate = calculateAverageNumberOfBitsPerCodeword(encodingMap, probabilityTable);
     freeTree(root);
-    writeResult(fileName, outputFile, probabilityPair.first, encodedFile, rate);
+    writeResult(fileName, outputFile, freqTable.first, encodedFile, rate, header);
+}
+
+void Huffman::decompress(char *fileName, char *outputFile){
+
 }
 
 
