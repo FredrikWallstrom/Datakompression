@@ -28,7 +28,7 @@ void Entropy::entropy(char *fileName, char *outputFile) {
 
 double Entropy::calculateEntropy(map<int, double> probabilityTable) {
     double entropy = 0.0;
-    for (auto &it : probabilityTable) entropy -= it.second * (log(it.second)/log(2.0));
+    for (auto &it : probabilityTable) entropy -= it.second * log2(it.second);
     return entropy;
 }
 
@@ -38,13 +38,13 @@ void Entropy::writeToFile(char *fileName, char *outputFile, int length, double k
     outfile << "The file size of " << fileName  << " " <<  "is:" << endl;
     outfile << length << " " << "Bytes." << endl;
     outfile << "The entropy is:" << endl;
-    outfile << "Markov source of order k = 0:  " << "H(Xi,...,Xi+k) = " << k0 << endl;
-    outfile << "Markov source of order k = 1:  " << "H(Xi,...,Xi+k) = " << k1 << endl;
-    outfile << "Markov source of order k = 2:  " << "H(Xi,...,Xi+k) = " << k2 << endl;
-    outfile << "This gives:" << endl;
-    outfile << "Markov source of order k = 0:  " << "H(Xi) = " << k0 << endl;
-    outfile << "Markov source of order k = 1:  " << "H(Xi|Xi-k) = " << k1 - k0 << endl;
-    outfile << "Markov source of order k = 2:  " << "H(Xi|Xi-1, Xi-k) = " << k2 - k0 - (k1 - k0) << endl;
+    outfile << "k = 0:  " << "H(Xi,...,Xi+k) = " << k0 << endl;
+    outfile << "k = 1:  " << "H(Xi,...,Xi+k) = " << k1 << endl;
+    outfile << "k = 2:  " << "H(Xi,...,Xi+k) = " << k2 << endl;
+    outfile << "The chain rule gives the conditional entropys:" << endl;
+    outfile << "k = 0:  " << "H(Xi) = " << k0 << endl;
+    outfile << "k = 1:  " << "H(Xi|Xi-k) = " << k1 - k0 << endl;
+    outfile << "k = 2:  " << "H(Xi|Xi-1, Xi-k) = " << k2 - k0 - (k1 - k0) << endl;
     outfile << endl;
     outfile.close();
 }

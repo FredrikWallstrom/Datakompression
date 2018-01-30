@@ -1,13 +1,17 @@
-//
-// Created by Fredrik Wallström on 2018-01-28.
-//
+/**
+ *
+ */
 
 #include "Frequency.h"
-#include <iostream>
 #include <fstream>
-#include <string>
-#include <map>
-#include <math.h>
+
+map<int, double> Frequency::calculateProbability(map<int, int> &frequencyTable, size_t &fileSize){
+    map<int, double> probabilityTable;
+    for (auto &it : frequencyTable) {
+        probabilityTable[it.first] = static_cast<double>(it.second)/static_cast<double>(fileSize);
+    }
+    return probabilityTable;
+}
 
 pair<int, map<int, double> > Frequency::calculateFrequency(char *fileName) {
     // Open the file.
@@ -32,10 +36,7 @@ pair<int, map<int, double> > Frequency::calculateFrequency(char *fileName) {
     file.close();
 
     // Calculate the probability.
-    map<int, double> probabilityTable;
-    for (auto &it : frequencyTable) {
-        probabilityTable[it.first] = static_cast<double>(it.second)/static_cast<double>(fileSize);
-    }
+    map<int, double> probabilityTable = calculateProbability(frequencyTable, fileSize);
     return make_pair(fileSize, probabilityTable);
 }
 
@@ -65,11 +66,7 @@ map<int, double> Frequency::calculateFrequencyPairs(char *fileName) {
     file.close();
 
     // Calculate the probability.
-    map<int, double> probabilityTable;
-      for (auto &it : frequencyTable) {
-        probabilityTable[it.first] = static_cast<double>(it.second)/static_cast<double>(fileSize);
-    }
-
+    map<int, double> probabilityTable = calculateProbability(frequencyTable, fileSize);
     return probabilityTable;
 }
 
@@ -102,9 +99,6 @@ map<int, double> Frequency::calculateFrequencyTripples(char *fileName) {
     file.close();
 
     // Calculate the probability.
-    map<int, double> probabilityTable;
-    for (auto &it : frequencyTable) {
-        probabilityTable[it.first] = static_cast<double>(it.second)/static_cast<double>(fileSize);
-    }
+    map<int, double> probabilityTable = calculateProbability(frequencyTable, fileSize);
     return probabilityTable;
 }

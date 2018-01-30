@@ -13,10 +13,14 @@
 using namespace std;
 
 class Frequency {
+
 public:
     pair<int, map<int, double> > calculateFrequency(char *fileName);
     map<int, double> calculateFrequencyPairs(char *name);
     map<int, double> calculateFrequencyTripples(char *name);
+
+private:
+    map<int, double> calculateProbability(map<int, int> &frequencyTable, size_t &fileSize);
 };
 
 

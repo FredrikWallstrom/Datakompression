@@ -1,0 +1,153 @@
+The file size of sources/alice29.txt is:
+152089 Bytes.
+The entropy is:
+k = 0:  H(Xi,...,Xi+k) = 4.56768
+k = 1:  H(Xi,...,Xi+k) = 7.98627
+k = 2:  H(Xi,...,Xi+k) = 10.4714
+The chain rule gives the conditional entropys:
+k = 0:  H(Xi) = 4.56768
+k = 1:  H(Xi|Xi-k) = 3.41859
+k = 2:  H(Xi|Xi-1, Xi-k) = 2.4851
+
+The file size of sources/asyoulik.txt is:
+125179 Bytes.
+The entropy is:
+k = 0:  H(Xi,...,Xi+k) = 4.80812
+k = 1:  H(Xi,...,Xi+k) = 8.22574
+k = 2:  H(Xi,...,Xi+k) = 10.7638
+The chain rule gives the conditional entropys:
+k = 0:  H(Xi) = 4.80812
+k = 1:  H(Xi|Xi-k) = 3.41762
+k = 2:  H(Xi|Xi-1, Xi-k) = 2.53807
+
+The file size of sources/cp.html is:
+24603 Bytes.
+The entropy is:
+k = 0:  H(Xi,...,Xi+k) = 5.22914
+k = 1:  H(Xi,...,Xi+k) = 8.69627
+k = 2:  H(Xi,...,Xi+k) = 10.4341
+The chain rule gives the conditional entropys:
+k = 0:  H(Xi) = 5.22914
+k = 1:  H(Xi|Xi-k) = 3.46713
+k = 2:  H(Xi|Xi-1, Xi-k) = 1.73784
+
+The file size of sources/fields.c is:
+11150 Bytes.
+The entropy is:
+k = 0:  H(Xi,...,Xi+k) = 5.0077
+k = 1:  H(Xi,...,Xi+k) = 7.95751
+k = 2:  H(Xi,...,Xi+k) = 9.42704
+The chain rule gives the conditional entropys:
+k = 0:  H(Xi) = 5.0077
+k = 1:  H(Xi|Xi-k) = 2.94981
+k = 2:  H(Xi|Xi-1, Xi-k) = 1.46953
+
+The file size of sources/grammar.lsp is:
+3721 Bytes.
+The entropy is:
+k = 0:  H(Xi,...,Xi+k) = 4.63227
+k = 1:  H(Xi,...,Xi+k) = 7.43563
+k = 2:  H(Xi,...,Xi+k) = 8.71955
+The chain rule gives the conditional entropys:
+k = 0:  H(Xi) = 4.63227
+k = 1:  H(Xi|Xi-k) = 2.80336
+k = 2:  H(Xi|Xi-1, Xi-k) = 1.28392
+
+The file size of sources/kennedy.xls is:
+1029744 Bytes.
+The entropy is:
+k = 0:  H(Xi,...,Xi+k) = 3.57347
+k = 1:  H(Xi,...,Xi+k) = 6.35078
+k = 2:  H(Xi,...,Xi+k) = 8.0623
+The chain rule gives the conditional entropys:
+k = 0:  H(Xi) = 3.57347
+k = 1:  H(Xi|Xi-k) = 2.7773
+k = 2:  H(Xi|Xi-1, Xi-k) = 1.71153
+
+The file size of sources/lcet10.txt is:
+426754 Bytes.
+The entropy is:
+k = 0:  H(Xi,...,Xi+k) = 4.66912
+k = 1:  H(Xi,...,Xi+k) = 8.16611
+k = 2:  H(Xi,...,Xi+k) = 10.7784
+The chain rule gives the conditional entropys:
+k = 0:  H(Xi) = 4.66912
+k = 1:  H(Xi|Xi-k) = 3.497
+k = 2:  H(Xi|Xi-1, Xi-k) = 2.61228
+
+The file size of sources/plrabn12.txt is:
+481861 Bytes.
+The entropy is:
+k = 0:  H(Xi,...,Xi+k) = 4.53136
+k = 1:  H(Xi,...,Xi+k) = 7.8974
+k = 2:  H(Xi,...,Xi+k) = 10.6143
+The chain rule gives the conditional entropys:
+k = 0:  H(Xi) = 4.53136
+k = 1:  H(Xi|Xi-k) = 3.36604
+k = 2:  H(Xi|Xi-1, Xi-k) = 2.71689
+
+The file size of sources/ptt5 is:
+513216 Bytes.
+The entropy is:
+k = 0:  H(Xi,...,Xi+k) = 1.21018
+k = 1:  H(Xi,...,Xi+k) = 2.03383
+k = 2:  H(Xi,...,Xi+k) = 2.73902
+The chain rule gives the conditional entropys:
+k = 0:  H(Xi) = 1.21018
+k = 1:  H(Xi|Xi-k) = 0.823655
+k = 2:  H(Xi|Xi-1, Xi-k) = 0.705193
+
+The file size of sources/sum is:
+38240 Bytes.
+The entropy is:
+k = 0:  H(Xi,...,Xi+k) = 5.32899
+k = 1:  H(Xi,...,Xi+k) = 8.62691
+k = 2:  H(Xi,...,Xi+k) = 10.5574
+The chain rule gives the conditional entropys:
+k = 0:  H(Xi) = 5.32899
+k = 1:  H(Xi|Xi-k) = 3.29792
+k = 2:  H(Xi|Xi-1, Xi-k) = 1.93048
+
+The file size of sources/xargs.1 is:
+4227 Bytes.
+The entropy is:
+k = 0:  H(Xi,...,Xi+k) = 4.89843
+k = 1:  H(Xi,...,Xi+k) = 8.09183
+k = 2:  H(Xi,...,Xi+k) = 9.6394
+The chain rule gives the conditional entropys:
+k = 0:  H(Xi) = 4.89843
+k = 1:  H(Xi|Xi-k) = 3.1934
+k = 2:  H(Xi|Xi-1, Xi-k) = 1.54757
+
+The file size of sources/large/bible.txt is:
+4047392 Bytes.
+The entropy is:
+k = 0:  H(Xi,...,Xi+k) = 4.34275
+k = 1:  H(Xi,...,Xi+k) = 7.61185
+k = 2:  H(Xi,...,Xi+k) = 10.0905
+The chain rule gives the conditional entropys:
+k = 0:  H(Xi) = 4.34275
+k = 1:  H(Xi|Xi-k) = 3.2691
+k = 2:  H(Xi|Xi-1, Xi-k) = 2.47861
+
+The file size of sources/large/E.coli is:
+4638690 Bytes.
+The entropy is:
+k = 0:  H(Xi,...,Xi+k) = 1.99982
+k = 1:  H(Xi,...,Xi+k) = 3.98124
+k = 2:  H(Xi,...,Xi+k) = 5.94447
+The chain rule gives the conditional entropys:
+k = 0:  H(Xi) = 1.99982
+k = 1:  H(Xi|Xi-k) = 1.98142
+k = 2:  H(Xi|Xi-1, Xi-k) = 1.96323
+
+The file size of sources/large/world192.txt is:
+2473400 Bytes.
+The entropy is:
+k = 0:  H(Xi,...,Xi+k) = 4.99831
+k = 1:  H(Xi,...,Xi+k) = 8.65878
+k = 2:  H(Xi,...,Xi+k) = 11.4294
+The chain rule gives the conditional entropys:
+k = 0:  H(Xi) = 4.99831
+k = 1:  H(Xi|Xi-k) = 3.66047
+k = 2:  H(Xi|Xi-1, Xi-k) = 2.77064
