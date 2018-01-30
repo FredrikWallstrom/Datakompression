@@ -13,7 +13,7 @@ using namespace std;
 
 struct Node{
     int ch;
-    double prob;
+    int freq;
     Node *left, *right;
 };
 
@@ -21,7 +21,7 @@ class Huffman {
 public:
     void compress(char* filename, char* outputFile);
 
-    Node* buildTree(map<int, double> map);
+    Node* buildTree(map<int, int> map);
 
     string encodeData(char *fileName, const map<int, string> &encodingMap);
 
@@ -31,13 +31,15 @@ public:
 
     void freeTree(Node *node);
 
-    void writeToFile(char *outputFile, map<int, double> &freqTable, string &encodedFile, string header);
+    void writeToFile(char *outputFile, string &encodedFile, string header);
 
     void decompress(char *fileName, char *outputFile);
 
     string buildHeader(map<int, int> &freqTable);
 
     map<int, int> readHeader(ifstream &inputfile);
+
+    Node *generateNode(int ch, int freq, Node *left, Node *right);
 };
 
 

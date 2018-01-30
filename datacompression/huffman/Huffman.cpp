@@ -18,30 +18,30 @@ using namespace std;
 // Compare operator that makes sure that the lowest probability has highest priority.
 struct nodeComp{
     bool operator()(Node *n1, Node *n2){
-        return n1->prob > n2->prob;
+        return n1->freq > n2->freq;
     }
 };
 
 
 // Help function to allocate a new node.
-Node* generateNode(int ch, double prob, Node *left, Node *right){
+Node* Huffman::generateNode(int ch, int freq, Node *left, Node *right){
     auto *n = new Node();
     n->ch = ch;
-    n->prob = prob;
+    n->freq = freq;
     n->left = left;
     n->right = right;
     return n;
 }
 
-Node* Huffman::buildTree(map<int, double> probabilityTable) {
+Node* Huffman::buildTree(map<int, int> freqTable) {
     priority_queue<Node*, vector<Node*>, nodeComp> pq;
     Node *left;
     Node *right;
     Node *parent;
 
     // Create leaf node for each char and add it to the queue.
-    for(auto i: probabilityTable){
-        Node* n = generateNode(i.first, i.second, nullptr, nullptr);
+    for(auto i: freqTable){
+        Node *n = generateNode(i.first, i.second, nullptr, nullptr);
         pq.push(n);
     }
 
@@ -54,7 +54,7 @@ Node* Huffman::buildTree(map<int, double> probabilityTable) {
 
         // Create new parent node with these two nodes above as children.
         // The probability of this node is the sum of the childrens probability.
-        double probSum = left->prob + right->prob;
+        int probSum = left->freq + right->freq;
         parent = generateNode('\0', probSum, left, right);
         pq.push(parent);
     }
@@ -107,6 +107,10 @@ void Huffman::writeResult(char* fileName, char* outputFile, size_t length, strin
     auto lengthHeader = static_cast<double>(header.size()*8);
     double lengthHuffmanCode = lengthHeader+lengthEncodedString;
 
+    cout << lengthHeader << endl;
+    cout << lengthEncodedString << endl;
+
+
     ofstream outfile;
     outfile.open(outputFile, std::ios_base::app);
 
@@ -145,7 +149,7 @@ void Huffman::freeTree(Node* node) {
     }
 }
 
-void Huffman::writeToFile(char *outputFile, map<int, double> &freqTable, string &encodedFile, string header){
+void Huffman::writeToFile(char *outputFile, string &encodedFile, string header){
     ofstream outfile;
     outfile.open(outputFile, std::ios_base::app);
     outfile << header;
@@ -197,22 +201,20 @@ map<int, int> Huffman::readHeader(ifstream &file)
 }
 
 
-int decodeDataHelper(ifstream &input, Node *root) {
-    if(!root->left && !root->right){
+int decodeDataHelper(int bit, Node *root) {
+    if(root->left == nullptr && root->right == nullptr){
         return root->ch;
     }
     else{
-        char bit = input.get();
-
-        if (bit == 1){
-            decodeDataHelper(input, root->left);
-        }else if(bit == 0){
-            decodeDataHelper(input, root->right);
+        if (bit == '1'){
+            decodeDataHelper(bit, root->right);
+        }else if(bit == '0'){
+            decodeDataHelper(bit, root->left);
         }
     }
 }
 
-
+/*
 string decodeData(ifstream &input, Node* encodingTree) {
     string res;
     while(true){
@@ -226,28 +228,32 @@ string decodeData(ifstream &input, Node* encodingTree) {
     return res;
 
 }
-
+*/
 void Huffman::compress(char *fileName, char *outputFile) {
     Frequency freq;
-
     pair<size_t, map<int, int> > freqTable = freq.calculateFrequency(fileName);
+
+    // Build this header so we can restore the file encoded file.
     string header = buildHeader(freqTable.second);
 
-    map<int, double> probabilityTable = freq.calculateProbability(freqTable.second, freqTable.first);
-    Node *root = buildTree(probabilityTable);
+    // Build encoding tree
+    Node *root = buildTree(freqTable.second);
+
     // Go through the tree and store the Huffman codes in a map.
     map<int, string> encodingMap;
     buildEncodingMap(root, encodingMap, "");
+
     // Go through the file and encode the symbols with its corresponding code in the encoding map.
     string encodedFile = encodeData(fileName, encodingMap);
-
-    // Write the result as strings to the output file.
-    writeToFile(outputFile, probabilityTable, encodedFile, header);
     freeTree(root);
 
-    // Only using this for the report. Show the rate and how much we can compress a single file.
- //   double rate = calculateAverageNumberOfBitsPerCodeword(encodingMap, probabilityTable);
- //   writeResult(fileName, outputFile, freqTable.first, encodedFile, rate, header);
+    // Write the result as strings to the output file.
+    writeToFile(outputFile, encodedFile, header);
+
+   // Only using this for the report. Show the rate and how much we can compress a single file.
+//    map<int, double> probabilityTable = freq.calculateProbability(freqTable.second, freqTable.first);
+//    double rate = calculateAverageNumberOfBitsPerCodeword(encodingMap, probabilityTable);
+//    writeResult(fileName, outputFile, freqTable.first, encodedFile, rate, header);
 }
 
 void Huffman::decompress(char *fileName, char *outputFile){
@@ -258,18 +264,29 @@ void Huffman::decompress(char *fileName, char *outputFile){
 
     map<int, int> freqTable = readHeader(file);
 
-    // Calculate the length of the encoded file
+
+
+
+  /*  // Calculate the length of the encoded file
     int pos = file.tellg();
     file.seekg(0, ios::end);
     int current = file.tellg();
     int length = current - pos;
     file.seekg(pos, ios::beg);
+*/
+    Node* root = buildTree(freqTable);
 
-    Frequency freq;
-    map<int, double> probabilityTable = freq.calculateProbability(freqTable, reinterpret_cast<size_t &>(length));
-    Node* root = buildTree(probabilityTable);
-    string decodedFile = decodeData(file, root);
-    cout << decodedFile << endl;
+    int res;
+    int bit;
+    while(true){
+        bit = file.get();
+        cout << bit << endl;
+        if (bit == EOF) break;
+        res += decodeDataHelper(bit, root);
+
+    }
+  //  string decodedFile = decodeData(file, root);
+    //cout << res << endl;
     freeTree(root);
 
 

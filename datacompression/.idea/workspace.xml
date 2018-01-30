@@ -13,10 +13,9 @@
   <component name="ChangeListManager">
     <list default="true" id="edf8074a-d10a-4f5c-ac88-787e2245e8b6" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/frequency/Frequency.cpp" afterPath="$PROJECT_DIR$/frequency/Frequency.cpp" />
       <change beforePath="$PROJECT_DIR$/huffman/Huffman.cpp" afterPath="$PROJECT_DIR$/huffman/Huffman.cpp" />
       <change beforePath="$PROJECT_DIR$/huffman/Huffman.h" afterPath="$PROJECT_DIR$/huffman/Huffman.h" />
-      <change beforePath="$PROJECT_DIR$/main/main.cpp" afterPath="$PROJECT_DIR$/main/main.cpp" />
+      <change beforePath="$PROJECT_DIR$/huffman/result.txt" afterPath="" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -44,8 +43,8 @@
       <file leaf-file-name="Huffman.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/huffman/Huffman.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="233">
-              <caret line="200" column="23" lean-forward="false" selection-start-line="200" selection-start-column="23" selection-end-line="200" selection-end-column="23" />
+            <state relative-caret-position="231">
+              <caret line="183" column="34" lean-forward="true" selection-start-line="183" selection-start-column="34" selection-end-line="183" selection-end-column="34" />
               <folding>
                 <element signature="e#55#75#0" expanded="true" />
               </folding>
@@ -76,31 +75,11 @@
       <file leaf-file-name="Huffman.h" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/huffman/Huffman.h">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="425">
-              <caret line="42" column="0" lean-forward="true" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
+            <state relative-caret-position="410">
+              <caret line="33" column="39" lean-forward="false" selection-start-line="33" selection-start-column="39" selection-end-line="33" selection-end-column="39" />
               <folding>
                 <element signature="e#123#142#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="test.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/test.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="result.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/huffman/result.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="45">
-              <caret line="3" column="45" lean-forward="false" selection-start-line="3" selection-start-column="45" selection-end-line="3" selection-end-column="45" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -117,6 +96,7 @@
       <find>encodeData</find>
       <find>cout</find>
       <find>result *</find>
+      <find>node *root</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -267,18 +247,17 @@
       <workItem from="1517146627888" duration="19000" />
       <workItem from="1517149904934" duration="16649000" />
       <workItem from="1517175155206" duration="10575000" />
-      <workItem from="1517294347043" duration="17573000" />
+      <workItem from="1517294347043" duration="20383000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="84164000" />
+    <option name="totallyTimeSpent" value="86974000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32941177" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
@@ -715,36 +694,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hej.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/frequency/Frequency.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="188">
           <caret line="23" column="3" lean-forward="true" selection-start-line="23" selection-start-column="3" selection-end-line="23" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/huffman/Huffman.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="42" column="0" lean-forward="true" selection-start-line="42" selection-start-column="0" selection-end-line="42" selection-end-column="0" />
-          <folding>
-            <element signature="e#123#142#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -759,10 +712,36 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/test.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/huffman/Huffman.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="410">
+          <caret line="33" column="39" lean-forward="false" selection-start-line="33" selection-start-column="39" selection-end-line="33" selection-end-column="39" />
+          <folding>
+            <element signature="e#123#142#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/hej.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/huffman/Huffman.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="233">
-          <caret line="200" column="23" lean-forward="false" selection-start-line="200" selection-start-column="23" selection-end-line="200" selection-end-column="23" />
+        <state relative-caret-position="231">
+          <caret line="183" column="34" lean-forward="true" selection-start-line="183" selection-start-column="34" selection-end-line="183" selection-end-column="34" />
           <folding>
             <element signature="e#55#75#0" expanded="true" />
           </folding>
