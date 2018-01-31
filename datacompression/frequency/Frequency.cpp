@@ -5,15 +5,16 @@
 #include "Frequency.h"
 #include <fstream>
 
-map<int, double> Frequency::calculateProbability(map<int, int> &frequencyTable, size_t &fileSize){
-    map<int, double> probabilityTable;
+
+map<BYTE, double> Frequency::calculateProbability(map<BYTE, int> &frequencyTable, size_t &fileSize){
+    map<BYTE, double> probabilityTable;
     for (auto &it : frequencyTable) {
         probabilityTable[it.first] = static_cast<double>(it.second)/static_cast<double>(fileSize);
     }
     return probabilityTable;
 }
 
-pair<int, map<int, int> > Frequency::calculateFrequency(char *fileName) {
+vector<BYTE> Frequency::readFile(char* fileName){
     // Open the file.
     ifstream file;
     file.open(fileName, ios::in|ios::binary|ios::ate);
@@ -23,69 +24,60 @@ pair<int, map<int, int> > Frequency::calculateFrequency(char *fileName) {
     auto fileSize = static_cast<size_t>(file.tellg());
     file.seekg(0, ios::beg);
 
-    // Calculate the frequency.
-    map<int, int> frequencyTable;
-    int c;
-    while(true){
-        c = file.get();
-        if(c == EOF) break;
-        frequencyTable[c]++;
-    }
-
-    // Close the file.
+    vector<unsigned char> fileData(fileSize);
+    file.read(reinterpret_cast<char *>(&fileData[0]), fileSize);
     file.close();
 
-    return make_pair(fileSize, frequencyTable);
+    // Convert to BYTES (unsigned int)
+    vector<BYTE> buffer;
+    for(auto c : fileData){
+        buffer.push_back(static_cast<BYTE>(c));
+    }
+
+    return buffer;
 }
 
-map<int, int> Frequency::calculateFrequencyPairs(char *fileName) {
-    // Open the file.
-    ifstream file;
-    file.open(fileName, ios::in|ios::binary|ios::ate);
-
-    // Calculate the frequency of pairs.
-    map<int, int> frequencyTable;
-    int c1;
-    int c2;
-    long int pos = 0;
-    while(true){
-        file.seekg(pos, ios::beg);
-        c1 = file.get();
-        c2 = file.get();
-        if(c1 == EOF || c2 == EOF) break;
-        int number = c1 << 8 | c2;
-        frequencyTable[number]++;
-        pos++;
+map<BYTE, int> Frequency::calculateFrequency(vector<BYTE> &fileData) {
+    map<BYTE, int> frequencyTable;
+    for (auto it : fileData) {
+        frequencyTable[it]++;
     }
-    // Close the file.
-    file.close();
 
     return frequencyTable;
 }
 
-map<int, int> Frequency::calculateFrequencyTripples(char *fileName) {
-    // Open the file.
-    ifstream file;
-    file.open(fileName, ios::in|ios::binary|ios::ate);
+map<BYTE, int> Frequency::calculateFrequencyPairs(vector<BYTE> &fileData) {
+    map<BYTE, int> frequencyTable;
+    for (int i = 0; i < fileData.size(); ++i) {
+        if(i+1 == fileData.size()) break;
+        BYTE c1 = fileData[i];
+        BYTE c2 = fileData[i+1];
+        BYTE res = c1 << 8 | c2;
+        frequencyTable[res]++;
 
-    // Calculate the frequency of pairs.
-    map<int, int> frequencyTable;
-    int c1;
-    int c2;
-    int c3;
-    int pos = 0;
-    while(true){
-        file.seekg(pos, ios::beg);
-        c1 = file.get();
-        c2 = file.get();
-        c3 = file.get();
-        if(c1 == EOF || c2 == EOF || c3 == EOF) break;
-        int n1 = c1 << 8 | c2;
-        int n2 = n1 << 8 | c3;
-        frequencyTable[n2]++;
-        pos++;
+        /*
+        BYTE test1;
+        BYTE test2;
+        test1 = static_cast<BYTE>(res >> 8);
+        test2 = static_cast<BYTE>(res & 0xFF);
+        cout << test1 << endl;
+        cout << test2 << endl;
+         */
+
     }
-    // Close the file.
-    file.close();
+    return frequencyTable;
+}
+
+map<BYTE, int> Frequency::calculateFrequencyTripples(vector<BYTE> &fileData) {
+    map<BYTE, int> frequencyTable;
+    for (int i = 0; i < fileData.size(); ++i) {
+        if(i+2 == fileData.size()) break;
+        BYTE c1 = fileData[i];
+        BYTE c2 = fileData[i+1];
+        BYTE c3 = fileData[i+2];
+        BYTE r = c1 << 8 | c2;
+        BYTE res = r << 8 | c3;
+        frequencyTable[res]++;
+    }
     return frequencyTable;
 }

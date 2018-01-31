@@ -11,14 +11,17 @@
 #include <map>
 
 using namespace std;
+typedef unsigned int BYTE;
 
 class Frequency {
 
 public:
-    pair<int, map<int, int> > calculateFrequency(char *fileName);
-    map<int, int> calculateFrequencyPairs(char *name);
-    map<int, int> calculateFrequencyTripples(char *name);
-    map<int, double> calculateProbability(map<int, int> &frequencyTable, size_t &fileSize);
+    map<BYTE, int>  calculateFrequency(vector<BYTE> &fileData);
+    map<BYTE, int> calculateFrequencyPairs(vector<BYTE> &fileData);
+    map<BYTE, int> calculateFrequencyTripples(vector<BYTE> &fileData);
+    map<BYTE, double> calculateProbability(map<BYTE, int> &frequencyTable, size_t &fileSize);
+
+    vector<BYTE> readFile(char *fileName);
 };
 
 

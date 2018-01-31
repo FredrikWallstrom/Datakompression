@@ -14,29 +14,32 @@ using namespace std;
 
 void Entropy::entropy(char *fileName, char *outputFile) {
     Frequency freq;
-    pair<size_t , map<int, int> > freqTable = freq.calculateFrequency(fileName);
-    size_t fileLength = freqTable.first;
-    map<int, double> probabilityTable = freq.calculateProbability(freqTable.second, fileLength);
+    vector<BYTE> fileData = freq.readFile(fileName);
+    unsigned long int fileLength = fileData.size();
+
+    map<BYTE, int> freqTable = freq.calculateFrequency(fileData);
+    map<BYTE, int> freqTablePair = freq.calculateFrequencyPairs(fileData);
+    map<BYTE, int> freqTableTripple = freq.calculateFrequencyTripples(fileData);
+
+    map<BYTE, double> probabilityTable = freq.calculateProbability(freqTable, fileLength);
+    map<BYTE, double> probabilityTablePair = freq.calculateProbability(freqTablePair, fileLength);
+    map<BYTE, double> probabilityTableTripple = freq.calculateProbability(freqTableTripple, fileLength);
+
     double entropyK0 = calculateEntropy(probabilityTable);
-
-    map<int, int> freqTablePair = freq.calculateFrequencyPairs(fileName);
-    map<int, double> probabilityTablePair = freq.calculateProbability(freqTablePair, fileLength);
     double entropyK1 = calculateEntropy(probabilityTablePair);
-
-    map<int, int> freqTableTripple = freq.calculateFrequencyTripples(fileName);
-    map<int, double> probabilityTableTripple = freq.calculateProbability(freqTableTripple, fileLength);
     double entropyK2 = calculateEntropy(probabilityTableTripple);
 
     writeToFile(fileName, outputFile, fileLength, entropyK0, entropyK1, entropyK2);
+
 }
 
-double Entropy::calculateEntropy(map<int, double> probabilityTable) {
+double Entropy::calculateEntropy(map<BYTE, double> probabilityTable) {
     double entropy = 0.0;
     for (auto &it : probabilityTable) entropy -= it.second * log2(it.second);
     return entropy;
 }
 
-void Entropy::writeToFile(char *fileName, char *outputFile, int length, double k0, double k1, double k2) {
+void Entropy::writeToFile(char *fileName, char *outputFile, unsigned long int length, double k0, double k1, double k2) {
     ofstream outfile;
     outfile.open(outputFile, std::ios_base::app);
     outfile << "The file size of " << fileName  << " " <<  "is:" << endl;
@@ -52,5 +55,6 @@ void Entropy::writeToFile(char *fileName, char *outputFile, int length, double k
     outfile << endl;
     outfile.close();
 }
+
 
 

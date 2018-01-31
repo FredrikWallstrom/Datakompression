@@ -11,12 +11,17 @@
 #include <map>
 
 using namespace std;
+typedef unsigned int BYTE;
 
 class Entropy {
+
 public:
     void entropy(char* fileName, char *outputFile);
-    double calculateEntropy(map<int, double> probabilityTable);
-    void writeToFile(char *name, char *file, int first, double k0, double k1, double k2);
+
+private:
+    double calculateEntropy(map<BYTE, double> probabilityTable);
+    void writeToFile(char *name, char *file, unsigned long int length, double k0, double k1, double k2);
+
 };
 
 

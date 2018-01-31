@@ -24,16 +24,16 @@ struct nodeComp{
 
 
 // Help function to allocate a new node.
-Node* Huffman::generateNode(int ch, int freq, Node *left, Node *right){
+Node* Huffman::generateNode(BYTE b, int freq, Node *left, Node *right){
     auto *n = new Node();
-    n->ch = ch;
+    n->byte = b;
     n->freq = freq;
     n->left = left;
     n->right = right;
     return n;
 }
 
-Node* Huffman::buildTree(map<int, int> freqTable) {
+Node* Huffman::buildTree(map<BYTE, int> freqTable) {
     priority_queue<Node*, vector<Node*>, nodeComp> pq;
     Node *left;
     Node *right;
@@ -54,19 +54,19 @@ Node* Huffman::buildTree(map<int, int> freqTable) {
 
         // Create new parent node with these two nodes above as children.
         // The probability of this node is the sum of the childrens probability.
-        int probSum = left->freq + right->freq;
-        parent = generateNode('\0', probSum, left, right);
+        int freqSum = left->freq + right->freq;
+        parent = generateNode('\0', freqSum, left, right);
         pq.push(parent);
     }
     return pq.top();
 }
 
 
-void buildEncodingMap(Node* root, map<int, string> &encodingMap, string path) {
+void buildEncodingMap(Node* root, map<BYTE, string> &encodingMap, string path) {
     if(root == nullptr) {
         return;
     } else if(root->left == nullptr && root->right == nullptr) {
-        encodingMap[root->ch] = path;
+        encodingMap[root->byte] = path;
     }else{
         buildEncodingMap(root->left, encodingMap, path + "0");
         buildEncodingMap(root->right, encodingMap, path + "1");
@@ -77,7 +77,7 @@ void buildEncodingMap(Node* root, map<int, string> &encodingMap, string path) {
  * This function reads one byte at a time (the character) and looks for this character in the map.
  * it Iterate over the path (string) and writes each character as an int to the ouputstream.
  */
-string Huffman::encodeData(char *fileName, const map<int, string> &encodingMap) {
+string Huffman::encodeData(char *fileName, map<BYTE, string> &encodingMap) {
     string result;
     // Open the file.
     ifstream file;
@@ -86,7 +86,7 @@ string Huffman::encodeData(char *fileName, const map<int, string> &encodingMap) 
     file.seekg(0, ios::beg);
 
     while(true){
-        int character = file.get();
+        auto character = static_cast<BYTE>(file.get());
         if (character == EOF){
             break;
         }
@@ -157,7 +157,7 @@ void Huffman::writeToFile(char *outputFile, string &encodedFile, string header){
     outfile.close();
 }
 
-string Huffman::buildHeader(map<int, int> &freqTable){
+string Huffman::buildHeader(map<BYTE, int> &freqTable){
     string header;
     for(auto it: freqTable){
         header += to_string(it.first);
@@ -174,11 +174,11 @@ map<int, int> Huffman::readHeader(ifstream &file)
     map<int, int> freqTable;
     string letter;
     string freq;
-    int character;
+    char character;
     bool afterColon  = false;
 
     while(true){
-        character = file.get();
+        character = static_cast<char>(file.get());
         if(character == '}'){
             break;
         }else if(character == ' '){
@@ -190,64 +190,58 @@ map<int, int> Huffman::readHeader(ifstream &file)
             afterColon = true;
         }else{
             if(afterColon){
-                freq += to_string(character);
+                freq += character;
             }else{
-                letter += to_string(character);
+                letter += character;
             }
         }
     }
-
     return freqTable;
 }
-
-
-int decodeDataHelper(int bit, Node *root) {
-    if(root->left == nullptr && root->right == nullptr){
-        return root->ch;
-    }
-    else{
-        if (bit == '1'){
-            decodeDataHelper(bit, root->right);
-        }else if(bit == '0'){
-            decodeDataHelper(bit, root->left);
-        }
-    }
-}
-
-/*
-string decodeData(ifstream &input, Node* encodingTree) {
+string decode(Node *root, ifstream &file, int length)
+{
     string res;
-    while(true){
-        int result = decodeDataHelper(input, encodingTree);
-        if (result == EOF){
-            break;
-        }else{
-            res += result;
+    Node *node = root;
+    for (int i = 0; i != length; ++i)
+    {
+        auto bit = file.get();
+        if (bit == 48) {            // Left child
+            node = node->left;
+        } else if(bit == 49) {      // Right child
+            node = node->right;
+        }
+        if (node->left == nullptr && node->right == nullptr)
+        {
+            res += static_cast<char>(node->byte);
+            node = root;
         }
     }
+    cout << res << endl;
     return res;
-
 }
-*/
+
 void Huffman::compress(char *fileName, char *outputFile) {
     Frequency freq;
-    pair<size_t, map<int, int> > freqTable = freq.calculateFrequency(fileName);
+    vector<BYTE> fileData = freq.readFile(fileName);
+    map<BYTE, int> freqTable = freq.calculateFrequency(fileData);
+    map<BYTE, int> freqTablePair = freq.calculateFrequencyPairs(fileData);
+    map<BYTE, int> freqTableTripple = freq.calculateFrequencyTripples(fileData);
 
-    // Build this header so we can restore the file encoded file.
-    string header = buildHeader(freqTable.second);
+    // Build this header so we can restore the encoded file.
+    string header = buildHeader(freqTable);
 
     // Build encoding tree
-    Node *root = buildTree(freqTable.second);
+    Node *root = buildTree(freqTable);
 
     // Go through the tree and store the Huffman codes in a map.
-    map<int, string> encodingMap;
+    map<BYTE, string> encodingMap;
     buildEncodingMap(root, encodingMap, "");
 
     // Go through the file and encode the symbols with its corresponding code in the encoding map.
     string encodedFile = encodeData(fileName, encodingMap);
     freeTree(root);
 
-    // Write the result as strings to the output file.
+    // Write the result as string to the output file.
     writeToFile(outputFile, encodedFile, header);
 
    // Only using this for the report. Show the rate and how much we can compress a single file.
@@ -256,42 +250,35 @@ void Huffman::compress(char *fileName, char *outputFile) {
 //    writeResult(fileName, outputFile, freqTable.first, encodedFile, rate, header);
 }
 
+
 void Huffman::decompress(char *fileName, char *outputFile){
     // Open the file.
     ifstream file;
     file.open(fileName, ios::in|ios::binary|ios::ate);
     file.seekg(0, ios::beg);
 
-    map<int, int> freqTable = readHeader(file);
+    map<int, int> freqTableInt = readHeader(file);
 
+    map<BYTE, int> freqTable;
+    for(auto it:freqTableInt){
+        freqTable[static_cast<BYTE>(it.first)] = it.second;
+    }
 
-
-
-  /*  // Calculate the length of the encoded file
-    int pos = file.tellg();
+    // Calculate the length of the encoded file
+    auto pos = static_cast<int>(file.tellg());
     file.seekg(0, ios::end);
-    int current = file.tellg();
+    auto current = static_cast<int>(file.tellg());
     int length = current - pos;
     file.seekg(pos, ios::beg);
-*/
+
     Node* root = buildTree(freqTable);
+    decode(root, file, length);
 
-    int res;
-    int bit;
-    while(true){
-        bit = file.get();
-        cout << bit << endl;
-        if (bit == EOF) break;
-        res += decodeDataHelper(bit, root);
-
-    }
-  //  string decodedFile = decodeData(file, root);
-    //cout << res << endl;
     freeTree(root);
-
 
     // Close the file.
     file.close();
+
 }
 
 

@@ -10,9 +10,10 @@
 #include <fstream>
 
 using namespace std;
+typedef unsigned int BYTE;
 
 struct Node{
-    int ch;
+    BYTE byte;
     int freq;
     Node *left, *right;
 };
@@ -21,9 +22,9 @@ class Huffman {
 public:
     void compress(char* filename, char* outputFile);
 
-    Node* buildTree(map<int, int> map);
+    Node* buildTree(map<BYTE, int> map);
 
-    string encodeData(char *fileName, const map<int, string> &encodingMap);
+    string encodeData(char *fileName, map<BYTE, string> &encodingMap);
 
     void writeResult(char *fileName, char *outputFile, size_t length, string &encodedStringOneSymbol, double rateOneSymbol, string header);
 
@@ -35,11 +36,11 @@ public:
 
     void decompress(char *fileName, char *outputFile);
 
-    string buildHeader(map<int, int> &freqTable);
+    string buildHeader(map<BYTE, int> &freqTable);
 
     map<int, int> readHeader(ifstream &inputfile);
 
-    Node *generateNode(int ch, int freq, Node *left, Node *right);
+    Node *generateNode(BYTE byte, int freq, Node *left, Node *right);
 };
 
 
