@@ -1,6 +1,6 @@
-/**
- *
- */
+//
+// Created by Fredrik Wallström on 2018-01-28.
+//
 
 #include "Frequency.h"
 #include <fstream>
@@ -42,7 +42,6 @@ map<BYTE, int> Frequency::calculateFrequency(vector<BYTE> &fileData) {
     for (auto it : fileData) {
         frequencyTable[it]++;
     }
-
     return frequencyTable;
 }
 
@@ -54,16 +53,6 @@ map<BYTE, int> Frequency::calculateFrequencyPairs(vector<BYTE> &fileData) {
         BYTE c2 = fileData[i+1];
         BYTE res = c1 << 8 | c2;
         frequencyTable[res]++;
-
-        /*
-        BYTE test1;
-        BYTE test2;
-        test1 = static_cast<BYTE>(res >> 8);
-        test2 = static_cast<BYTE>(res & 0xFF);
-        cout << test1 << endl;
-        cout << test2 << endl;
-         */
-
     }
     return frequencyTable;
 }
