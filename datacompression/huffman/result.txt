@@ -1,0 +1,98 @@
+The file size of sources/alice29.txt is:
+152089 Bytes = 1.21671e+06 Bits.
+Huffman coding with 1 symbols at a time:
+Length: 705830 Bits
+Compression rate: 41.9887%
+Rate: 4.61244 Bits/Symbol
+
+The file size of sources/asyoulik.txt is:
+125179 Bytes = 1.00143e+06 Bits.
+Huffman coding with 1 symbols at a time:
+Length: 610544 Bits
+Compression rate: 39.0329%
+Rate: 4.84465 Bits/Symbol
+
+The file size of sources/cp.html is:
+24603 Bytes = 196824 Bits.
+Huffman coding with 1 symbols at a time:
+Length: 134172 Bits
+Compression rate: 31.8315%
+Rate: 5.26716 Bits/Symbol
+
+The file size of sources/fields.c is:
+11150 Bytes = 89200 Bits.
+Huffman coding with 1 symbols at a time:
+Length: 60806 Bits
+Compression rate: 31.8318%
+Rate: 5.0409 Bits/Symbol
+
+The file size of sources/grammar.lsp is:
+3721 Bytes = 29768 Bits.
+Huffman coding with 1 symbols at a time:
+Length: 20980 Bits
+Compression rate: 29.5216%
+Rate: 4.66434 Bits/Symbol
+
+The file size of sources/kennedy.xls is:
+1029744 Bytes = 8.23795e+06 Bits.
+Huffman coding with 1 symbols at a time:
+Length: 3.71595e+06 Bits
+Compression rate: 54.8923%
+Rate: 3.59337 Bits/Symbol
+
+The file size of sources/lcet10.txt is:
+426754 Bytes = 3.41403e+06 Bits.
+Huffman coding with 1 symbols at a time:
+Length: 2.00967e+06 Bits
+Compression rate: 41.1349%
+Rate: 4.69712 Bits/Symbol
+
+The file size of sources/plrabn12.txt is:
+481861 Bytes = 3.85489e+06 Bits.
+Huffman coding with 1 symbols at a time:
+Length: 2.20949e+06 Bits
+Compression rate: 42.6833%
+Rate: 4.57534 Bits/Symbol
+
+The file size of sources/ptt5 is:
+513216 Bytes = 4.10573e+06 Bits.
+Huffman coding with 1 symbols at a time:
+Length: 860775 Bits
+Compression rate: 79.0348%
+Rate: 1.66091 Bits/Symbol
+
+The file size of sources/sum is:
+38240 Bytes = 305920 Bits.
+Huffman coding with 1 symbols at a time:
+Length: 218439 Bits
+Compression rate: 28.596%
+Rate: 5.36504 Bits/Symbol
+
+The file size of sources/xargs.1 is:
+4227 Bytes = 33816 Bits.
+Huffman coding with 1 symbols at a time:
+Length: 24437 Bits
+Compression rate: 27.7354%
+Rate: 4.92382 Bits/Symbol
+
+The file size of sources/large/bible.txt is:
+4047392 Bytes = 3.23791e+07 Bits.
+Huffman coding with 1 symbols at a time:
+Length: 1.7752e+07 Bits
+Compression rate: 45.1745%
+Rate: 4.38495 Bits/Symbol
+
+The file size of sources/large/E.coli is:
+4638690 Bytes = 3.71095e+07 Bits.
+Huffman coding with 1 symbols at a time:
+Length: 9.27776e+06 Bits
+Compression rate: 74.999%
+Rate: 2 Bits/Symbol
+
+The file size of sources/large/world192.txt is:
+2473400 Bytes = 1.97872e+07 Bits.
+Huffman coding with 1 symbols at a time:
+Length: 1.2475e+07 Bits
+Compression rate: 36.954%
+Rate: 5.04114 Bits/Symbol
+

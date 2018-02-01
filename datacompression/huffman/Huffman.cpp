@@ -62,7 +62,7 @@ Node* Huffman::buildTree(map<BYTE, int> freqTable) {
 }
 
 
-void buildEncodingMap(Node* root, map<BYTE, string> &encodingMap, string path) {
+void Huffman::buildEncodingMap(Node* root, map<BYTE, string> &encodingMap, string path) {
     if(root == nullptr) {
         return;
     } else if(root->left == nullptr && root->right == nullptr) {
@@ -73,10 +73,6 @@ void buildEncodingMap(Node* root, map<BYTE, string> &encodingMap, string path) {
     }
 }
 
-/*
- * This function reads one byte at a time (the character) and looks for this character in the map.
- * it Iterate over the path (string) and writes each character as an int to the ouputstream.
- */
 string Huffman::encodeData(char *fileName, map<BYTE, string> &encodingMap) {
     string result;
     // Open the file.
@@ -97,40 +93,14 @@ string Huffman::encodeData(char *fileName, map<BYTE, string> &encodingMap) {
     }
     // Close the file.
     file.close();
-
     return result;
 }
 
-void Huffman::writeResult(char* fileName, char* outputFile, size_t length, string &encodedStringOneSymbol, double rateOneSymbol, string header){
-    auto lengthBit = static_cast<double>(length*8);
-    auto lengthEncodedString = static_cast<double>(encodedStringOneSymbol.size());
-    auto lengthHeader = static_cast<double>(header.size()*8);
-    double lengthHuffmanCode = lengthHeader+lengthEncodedString;
-
-    cout << lengthHeader << endl;
-    cout << lengthEncodedString << endl;
-
-
-    ofstream outfile;
-    outfile.open(outputFile, std::ios_base::app);
-
-    outfile << "The file size of " << fileName  << " " <<  "is:" << endl;
-    outfile << length << " " << "Bytes = " << lengthBit << " Bits." << endl;
-
-    outfile << "Huffman coding with 1 symbols at a time:" << endl;
-    outfile << "Length: " << lengthHuffmanCode << " Bits" << endl;
-    outfile << "Compression rate: " << (1 - lengthHuffmanCode/lengthBit) * 100 << "%" << endl;
-    outfile << "Rate: " << rateOneSymbol << " Bits/Symbol" << endl;
-
-    outfile << endl;
-    outfile.close();
-}
-
-double Huffman::calculateAverageNumberOfBitsPerCodeword(map<int, string> &encodingMap, map<int, double> &probabilityTable){
+double Huffman::calculateAverageNumberOfBitsPerCodeword(map<BYTE, string> &encodingMap, map<BYTE, double> &probabilityTable){
     double anobpc = 0.0;
     for(auto it: encodingMap){
         auto length = static_cast<double>(it.second.size());
-        int c = it.first;
+        BYTE c = it.first;
         anobpc += probabilityTable[c] * length;
     }
     return anobpc;
@@ -144,7 +114,7 @@ void Huffman::freeTree(Node* node) {
         node->right = nullptr;
         freeTree(node->left);
         node->left = nullptr;
-        // delete the root of the subtree
+        // Delete the root of the subtree.
         delete node;
     }
 }
@@ -198,7 +168,7 @@ map<int, int> Huffman::readHeader(ifstream &file)
     }
     return freqTable;
 }
-string decode(Node *root, ifstream &file, int length)
+string Huffman::decode(Node *root, ifstream &file, int length)
 {
     string res;
     Node *node = root;
@@ -216,16 +186,14 @@ string decode(Node *root, ifstream &file, int length)
             node = root;
         }
     }
-    cout << res << endl;
     return res;
 }
 
 void Huffman::compress(char *fileName, char *outputFile) {
     Frequency freq;
     vector<BYTE> fileData = freq.readFile(fileName);
+    unsigned long int fileLength = fileData.size();
     map<BYTE, int> freqTable = freq.calculateFrequency(fileData);
-    map<BYTE, int> freqTablePair = freq.calculateFrequencyPairs(fileData);
-    map<BYTE, int> freqTableTripple = freq.calculateFrequencyTripples(fileData);
 
     // Build this header so we can restore the encoded file.
     string header = buildHeader(freqTable);
@@ -245,9 +213,9 @@ void Huffman::compress(char *fileName, char *outputFile) {
     writeToFile(outputFile, encodedFile, header);
 
    // Only using this for the report. Show the rate and how much we can compress a single file.
-//    map<int, double> probabilityTable = freq.calculateProbability(freqTable.second, freqTable.first);
-//    double rate = calculateAverageNumberOfBitsPerCodeword(encodingMap, probabilityTable);
-//    writeResult(fileName, outputFile, freqTable.first, encodedFile, rate, header);
+   // map<BYTE, double> probabilityTable = freq.calculateProbability(freqTable, fileLength);
+   // double rate = calculateAverageNumberOfBitsPerCodeword(encodingMap, probabilityTable);
+   // writeResult(fileName, outputFile, fileLength, encodedFile, rate, header);
 }
 
 
@@ -257,12 +225,12 @@ void Huffman::decompress(char *fileName, char *outputFile){
     file.open(fileName, ios::in|ios::binary|ios::ate);
     file.seekg(0, ios::beg);
 
+    // Restore the frequency table.
     map<int, int> freqTableInt = readHeader(file);
 
+    // Cast all int to unsigned int, BYTE, don't know if this is necessary.
     map<BYTE, int> freqTable;
-    for(auto it:freqTableInt){
-        freqTable[static_cast<BYTE>(it.first)] = it.second;
-    }
+    for(auto it:freqTableInt) freqTable[static_cast<BYTE>(it.first)] = it.second;
 
     // Calculate the length of the encoded file
     auto pos = static_cast<int>(file.tellg());
@@ -271,14 +239,37 @@ void Huffman::decompress(char *fileName, char *outputFile){
     int length = current - pos;
     file.seekg(pos, ios::beg);
 
+    // Build the tree and decode the file.
     Node* root = buildTree(freqTable);
-    decode(root, file, length);
-
+    string decodedFile = decode(root, file, length);
     freeTree(root);
 
     // Close the file.
     file.close();
 
+    // Write the result to the given output file.
+    ofstream outfile;
+    outfile.open(outputFile, std::ios_base::app);
+    outfile << decodedFile;
+    outfile.close();
 }
+
+void Huffman::writeResult(char* fileName, char* outputFile, size_t length, string &encodedStringOneSymbol, double rateOneSymbol, string header){
+    auto lengthBit = static_cast<double>(length*8);
+    auto lengthEncodedString = static_cast<double>(encodedStringOneSymbol.size());
+    auto lengthHeader = static_cast<double>(header.size()*8);
+    double lengthHuffmanCode = lengthHeader+lengthEncodedString;
+    ofstream outfile;
+    outfile.open(outputFile, std::ios_base::app);
+    outfile << "The file size of " << fileName  << " " <<  "is:" << endl;
+    outfile << length << " " << "Bytes = " << lengthBit << " Bits." << endl;
+    outfile << "Huffman coding with 1 symbols at a time:" << endl;
+    outfile << "Length: " << lengthHuffmanCode << " Bits" << endl;
+    outfile << "Compression rate: " << (1 - lengthHuffmanCode/lengthBit) * 100 << "%" << endl;
+    outfile << "Rate: " << rateOneSymbol << " Bits/Symbol" << endl;
+    outfile << endl;
+    outfile.close();
+}
+
 
 
