@@ -30,7 +30,6 @@ void Entropy::entropy(char *fileName, char *outputFile) {
     double entropyK2 = calculateEntropy(probabilityTableTripple);
 
     writeToFile(fileName, outputFile, fileLength, entropyK0, entropyK1, entropyK2);
-
 }
 
 double Entropy::calculateEntropy(map<BYTE, double> probabilityTable) {
