@@ -16,6 +16,7 @@ public:
     void compress(char *fileName, char *outputFile);
     void decompress(char *fileName, char *outputFile);
 
+    bool dictionaryIsFull(int dictionary);
 };
 
 

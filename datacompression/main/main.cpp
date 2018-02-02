@@ -13,18 +13,18 @@ using namespace std;
 
 void huffmanCoding(char *inputFile, char *outputFile, const char *code){
     Huffman huffman;
-    if(code == "Encode"){
+    if(string(code) == "Compress"){
         huffman.compress(inputFile, outputFile);
-    }else if(code == "Decode"){
+    }else if(string(code) == "Decompress"){
         huffman.decompress(inputFile, outputFile);
     }
 }
 
 void lzwCoding(char *inputFile, char *outputFile,  const char *code){
     LZW lzw;
-    if(code == "Encode"){
+    if(string(code) == "Compress"){
         lzw.compress(inputFile, outputFile);
-    }else if(code == "Decode"){
+    }else if(string(code) == "Decompress"){
         lzw.decompress(inputFile, outputFile);
     }
 }
@@ -49,16 +49,16 @@ int main(int argc, char *argv[]) {
         entropyEstimation(argv[2], argv[3]);
     }
     else if(string(argv[1]) == "-hc") {
-        huffmanCoding(argv[2], argv[3], "Encode");
+        huffmanCoding(argv[2], argv[3], "Compress");
     }
     else if(string(argv[1]) == "-hd") {
-        huffmanCoding(argv[2], argv[3], "Decode");
+        huffmanCoding(argv[2], argv[3], "Decompress");
     }
     else if(string(argv[1]) == "-lzwc") {
-        lzwCoding(argv[2], argv[3], "Decode");
+        lzwCoding(argv[2], argv[3], "Compress");
     }
     else if(string(argv[1]) == "-lzwd") {
-        lzwCoding(argv[2], argv[3], "Decode");
+        lzwCoding(argv[2], argv[3], "Decompress");
     }
 
     return 0;
