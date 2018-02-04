@@ -1,0 +1,83 @@
+The file size of sources/alice29.txt is:
+1.21671e+06 Bits
+The size of the LZW compressed file is:
+701480 Bits
+Space Savings: 42.3463%
+
+The file size of sources/asyoulik.txt is:
+1.00143e+06 Bits
+The size of the LZW compressed file is:
+627480 Bits
+Space Savings: 37.3417%
+
+The file size of sources/cp.html is:
+196824 Bits
+The size of the LZW compressed file is:
+149480 Bits
+Space Savings: 24.054%
+
+The file size of sources/fields.c is:
+89200 Bits
+The size of the LZW compressed file is:
+70840 Bits
+Space Savings: 20.583%
+
+The file size of sources/grammar.lsp is:
+29768 Bits
+The size of the LZW compressed file is:
+28180 Bits
+Space Savings: 5.33459%
+
+The file size of sources/kennedy.xls is:
+8.23795e+06 Bits
+The size of the LZW compressed file is:
+3.13958e+06 Bits
+Space Savings: 61.8888%
+
+The file size of sources/lcet10.txt is:
+3.41403e+06 Bits
+The size of the LZW compressed file is:
+1.6869e+06 Bits
+Space Savings: 50.5892%
+
+The file size of sources/plrabn12.txt is:
+3.85489e+06 Bits
+The size of the LZW compressed file is:
+2.01908e+06 Bits
+Space Savings: 47.6229%
+
+The file size of sources/ptt5 is:
+4.10573e+06 Bits
+The size of the LZW compressed file is:
+701160 Bits
+Space Savings: 82.9224%
+
+The file size of sources/sum is:
+305920 Bits
+The size of the LZW compressed file is:
+250540 Bits
+Space Savings: 18.1028%
+
+The file size of sources/xargs.1 is:
+33816 Bits
+The size of the LZW compressed file is:
+35840 Bits
+Space Savings: -5.98533%
+
+The file size of sources/large/bible.txt is:
+3.23791e+07 Bits
+The size of the LZW compressed file is:
+1.09802e+07 Bits
+Space Savings: 66.0885%
+
+The file size of sources/large/E.coli is:
+3.71095e+07 Bits
+The size of the LZW compressed file is:
+1.08859e+07 Bits
+Space Savings: 70.6655%
+
+The file size of sources/large/world192.txt is:
+1.97872e+07 Bits
+The size of the LZW compressed file is:
+7.24514e+06 Bits
+Space Savings: 63.3847%

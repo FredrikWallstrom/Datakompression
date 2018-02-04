@@ -3,6 +3,7 @@
 //
 
 #include "LZW.h"
+#include "../frequency/Frequency.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -14,154 +15,121 @@
 #include <fstream>
 #include <vector>
 
-static const int BITS_TO_WRITE = 15;
-static auto MAX_SIZE_DICTIONARY = static_cast<const int>(exp2(BITS_TO_WRITE));
-
-void loadDictionaryStringKey(unordered_map<string,int> &dictionary){
-    for (int i = 0; i < 256; ++i) {
-        dictionary[string(1, i)] = i;
-
-    }
-}
-
-void loadDictionaryIntKey(unordered_map<int, string> &dictionary){
-    for (int i = 0; i < 256; ++i) {
-        dictionary[i] = string(1, i);
-    }
-}
-
-void LZW::decompress(char *fileName, char *outputFile) {
-    string s;
-    char byte, res;
-    char prevCode;
-    char currCode;
-
-    int sizeOfDictionary = 256;
-    unordered_map<int, string> dictionary;
-    loadDictionaryIntKey(dictionary);
-    
-    // Open the file.
-    ifstream file;
-    file.open(fileName, ios::in | ios::binary | ios::ate);
-
-    // Get the length of the original file.
-    file.seekg(0, ios::end);
-    auto originalFileSize = static_cast<double>(file.tellg());
-    file.seekg(0, ios::beg);
-
-
-  //  prevCode = static_cast<char>(file.get());
-   // cout << prevCode;
-
-
-    std::vector<char> result(BITS_TO_WRITE);
-    char hej;
-    while(true){
-        hej = static_cast<char>(file.get());
-        if(hej == EOF) break;
-        result[0] = hej;
-        for (int j = 1; j < 15; ++j) {
-            hej = static_cast<char>(file.get());
-            result[j] = hej;
-        }
-
-        int number = 0;
-        int bits = 14;
-        auto test = static_cast<int>(exp2(bits));
-        cout << result.size() << endl;
-        for (int i = 0; i <= 14; ++i) {
-            // Taking minus 48 since 0 is interpreted as 48 in ascii table.
-            number += (result[i] - 48) * test;
-            bits--;
-            test = static_cast<int>(exp2(bits));
-        }
-
-
-
-
-      /*  s = dictionary[currCode];
-       // cout << s << endl;
-     //   res += static_cast<char>(s);
-        byte = s[0];
-        dictionary[sizeOfDictionary++] = prevCode + byte;
-        prevCode = currCode;
-        */
-    }
-
-
-    file.close();
-
-
-}
+static const int STATIC_BITS = 20;
 
 void LZW::compress(char *fileName, char *outputFile) {
-    string s;
-    char byte;
-    int sizeOfDictionary = 256;
-    unordered_map<string, int> dictionary;
-    loadDictionaryStringKey(dictionary);
+    // Read the uncompressed file.
+    Frequency freq;
+    vector<unsigned int> uncompressed = freq.readFile(fileName);
 
-    // Open the file.
-    ifstream file;
-    file.open(fileName, ios::in | ios::binary | ios::ate);
-
-    // Get the length of the original file.
-    file.seekg(0, ios::end);
-    auto originalFileSize = static_cast<double>(file.tellg());
-    file.seekg(0, ios::beg);
-
-    // Open the output stream.
+    // Open the output file.
     ofstream outfile;
     outfile.open(outputFile, ios::app | ios::binary);
 
-    // Start compress the file.
-    while (true) {
-        byte = static_cast<char>(file.get());
-        if (byte == EOF) break;
+    // Build the dictionary.
+    int dictSize = 256;
+    map<string, int> dictionary;
+    for (int i = 0; i < 256; i++) dictionary[string(1, i)] = i;
 
-        // If dictionary contains s + byte.
-        if (dictionary.find(s + byte) != dictionary.end()) {
-            s += byte;
-        } else {
-            if(!dictionaryIsFull(sizeOfDictionary)){
-                // Encode s to result string.
-                cout << dictionary[s] << endl;
-                outfile << bitset<BITS_TO_WRITE>(static_cast<unsigned long long int>(dictionary[s]));
-                // Add s + byte to dictionary.
-                dictionary[s + byte] = sizeOfDictionary++;
-                s = byte;
-            }else{
-                outfile << bitset<BITS_TO_WRITE>(static_cast<unsigned long long int>(dictionary[s]));
-                s = byte;
-            }
+    // This is the main compression algorithm.
+    string currentString;
+    for (unsigned int i : uncompressed) {
+        auto byte = static_cast<char>(i);
+        string currentStringAndByte = currentString + byte;
 
+        // If currentString plus one Byte exists in the dictionary already, set currentString to that string.
+        if (dictionary.find(currentStringAndByte) != dictionary.end()){
+            currentString = currentStringAndByte;
+        }
+            // If currentString plus ont Byte don't exists in the dictionary. Output corresponding bits of the value to output.
+            // Here we have static LZW so we can choose how many bits we output.
+            // Also add the currentString plus one Byte to the dictionary if is not full.
+        else {
+            outfile << bitset<STATIC_BITS>(dictionary[currentString]);
+            if(dictSize != exp2(static_cast<double>(STATIC_BITS))) dictionary[currentStringAndByte] = dictSize++;
+
+            // Set currentString to the last reed byte.
+            currentString = string(1, byte);
         }
     }
-    // Encode s to result string.
-    outfile << bitset<BITS_TO_WRITE>(static_cast<unsigned long long int>(dictionary[s]));
 
-    // Close the file.
+    // Output the code for w.
+    if (!currentString.empty())
+        outfile << bitset<STATIC_BITS>(dictionary[currentString]);
+
+    // Close the file
     outfile.close();
-    file.close();
 
     // Open the compressed file.
     ifstream compressedFile;
     compressedFile.open(outputFile, ios::in | ios::binary | ios::ate);
 
-    // Get the length of the compressed file file.
+    // Get the length of the compressed file file and calculate the space saving ratio.
     compressedFile.seekg(0, ios::end);
     auto compressedFileSize = static_cast<double>(compressedFile.tellg());
-    originalFileSize = originalFileSize*8;
+    auto originalFileSize = static_cast<double>(uncompressed.size()*8);
     compressedFile.close();
-
-    double rate = compressedFileSize / originalFileSize;
+    double compressionRatio = compressedFileSize / originalFileSize;
     cout << "The file size of " << fileName << " " << "is:" << endl;
     cout << originalFileSize << " " << "Bits" << endl;
     cout << "The size of the LZW compressed file is:" << endl;
     cout << compressedFileSize << " Bits" << endl;
-    cout << "Compression rate: " << (1 - rate) * 100 << "%" << endl;
+    cout << "Space Savings: " << (1 - compressionRatio) * 100 << "%" << endl;
 }
 
-bool LZW::dictionaryIsFull(int sizeOfDictionary) {
-    return sizeOfDictionary == (MAX_SIZE_DICTIONARY);
+void LZW::decompress(char *fileName, char *outputFile) {
+    // Read the compressed file.
+    Frequency freq;
+    vector<unsigned int> compressed = freq.readFile(fileName);
+
+    // Build the dictionary.
+    int dictSize = 256;
+    map<int, string> dictionary;
+    for (int i = 0; i < 256; i++) dictionary[i] = string(1, i);
+
+    // Read the first byte in the compressed file.
+    string byte;
+    int currentPosition = 0;
+    int loop = 0;
+    while(loop++ < STATIC_BITS){
+        byte += compressed[currentPosition++];
+    }
+
+    // Convert the byte string "10101001010101" to corresponding integer.
+    string prev(1, stoi(byte, nullptr, 2));
+    string result = prev;
+    string entry;
+
+    // Decompression algorithm.
+    while (currentPosition < compressed.size()) {
+
+        // Read a byte from the compression file.
+        byte = "";
+        loop = 0;
+        while(loop++ < STATIC_BITS){
+            byte += compressed[currentPosition++];
+        }
+
+        // Convert the byte string "10101001010101" to corresponding integer.
+        int curr = stoi(byte, nullptr, 2);
+
+        // When we coding one symbol, prev, we know that prev is a prefix of the current symbol, curr.
+        // Therefore we add prev + entry[0] to the dictionary.
+        // So we always build the dictionary up for possible combinations.
+        // The entry is either the corresponding string in dictionary if the symbol exists.
+        // Or it is the previous string plus the first symbol in previous.
+        if (dictionary.count(curr)) entry = dictionary[curr];
+        else if (curr == dictSize) entry = prev + prev[0];
+        result += entry;
+        if(dictSize != exp2(static_cast<double>(STATIC_BITS))) dictionary[dictSize++] = prev + entry[0];
+        prev = entry;
+
+    }
+
+    // Open the output file and write the result.
+    ofstream outfile;
+    outfile.open(outputFile, ios::app | ios::binary);
+    outfile << result;
+    outfile.close();
 }
+

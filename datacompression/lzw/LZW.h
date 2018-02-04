@@ -8,15 +8,21 @@
 #include <array>
 
 typedef unsigned int BYTE;
-
 using namespace std;
+
 class LZW {
+
 public:
 
+    /**
+     * Compress function. It will read the file and compress it with static LZW compression algorithm.
+     */
     void compress(char *fileName, char *outputFile);
-    void decompress(char *fileName, char *outputFile);
 
-    bool dictionaryIsFull(int dictionary);
+    /**
+     * Decompression function. It will read the compressed file and decompress it with LZW algorithm.
+     */
+    void decompress(char *fileName, char *outputFile);
 };
 
 
