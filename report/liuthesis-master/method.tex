@@ -1,0 +1,54 @@
+%%% lorem.tex --- 
+%% 
+%% Filename: lorem.tex
+%% Description: 
+%% Author: Ola Leifler
+%% Maintainer: 
+%% Created: Wed Nov 10 09:59:23 2010 (CET)
+%% Version: $Id$
+%% Version: 
+%% Last-Updated: Wed Nov 10 09:59:47 2010 (CET)
+%%           By: Ola Leifler
+%%     Update #: 2
+%% URL: 
+%% Keywords: 
+%% Compatibility: 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%%% Commentary: 
+%% 
+%% 
+%% 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%%% Change log:
+%% 
+%% 
+%% RCS $Log$
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 
+%%% Code:
+
+\chapter{Method}
+\label{cha:method}
+
+Nedan gås igenom hur entropi estimering, Huffman-kodning och LZW-kodning har genomförts.
+
+\subsection{Entropi estimering}
+För att göra en entropi estimering av givna källor, som angavs i laborationens uppgift, skrevs ett program i C++. Programmet utgick ifrån en funktion som beräknade entropin för en given källa enligt formeln som beskrivs i teori avsnittet. Funktionen tar in en sannolikhetstabell som mappar varje symbol mot dess sannolikhet att den förekommer i källan. Denna lista behövde alltså genereras innan entropin kunde beräknas.
+
+För att generera en sannolikhetstabell jag estimera sannolikheterna för varje symbol i källan. Detta gjordes genom att först spara hela filen i en lista, för att sedan iterera över den och addera 1 i en ny lista för varje påträffad symbol i källan. Denna nya lista mappar således symboler mot hur många gånger den förekommer i källan, det vill säga, en frekvenstabell. Denna frekvenstabell användes sedan för att beräkna sannolikhetstabellen genom att dividera varje frekvens med källans storlek. Den önskade entropin kunde sedan beräknas.
+
+I laborationen har även betingade entropier beräknats för källorna. En betingad entropi betyder att vi beräknar entropi då vi känner till hur källan ser ut K steg tillbaka i tiden. De betingade entropierna som har beräknats är då K = 1 och då K = 2, detta utrycks genom följande, H(Xi|Xi-1) och H(Xi|Xi-1, Xi-2). För att beräkna de betingade entropierna krävdes en sannolikhetstabell för par av symboler och för tripplar av symboler. Dessa sannolikhetstabeller togs fram på motsvarande sätt som för en symbol, med undantag att två respektive tre symboler lästes in i taget. Dessa symboler adderades sedan genom att konkatenera dess bit representation, detta skapar en unik ny symbol. Vi har då sannolikhetstabeller för par och tripplar av symboler. Sedan beräknades den gemensamma entopin, H(X1, X2) och H(X1, X2, X3) med samma entropi funktion som användes för singlar av symboler. Efter det användes kedjeregeln, H(X1, X2, ..., Xn) = H(X1) + H(X2|X1) + ... + H(Xn|X1, ..., Xn-1), för att beräkna den betingade entropin.
+
+\subsection{Huffman-kodning}
+\subsection{LZW-kodning}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% lorem.tex ends here
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: "demothesis"
+%%% End: 
