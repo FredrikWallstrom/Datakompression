@@ -23,6 +23,12 @@ public:
      * Decompression function. It will read the compressed file and decompress it with LZW algorithm.
      */
     void decompress(char *fileName, char *outputFile);
+
+private:
+
+    vector<int> convertToBits(int x);
+
+    string convertToString(int bitsToWrite, const vector<int> &bitRepresentation) const;
 };
 
 

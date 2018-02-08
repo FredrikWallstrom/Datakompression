@@ -15,7 +15,19 @@
 #include <fstream>
 #include <vector>
 
-static const int STATIC_BITS = 20;
+
+vector<int> LZW::convertToBits(int x) {
+    vector<int> ret;
+    while(x) {
+        if (x&1)
+            ret.push_back(1);
+        else
+            ret.push_back(0);
+        x>>=1;
+    }
+    reverse(ret.begin(),ret.end());
+    return ret;
+}
 
 void LZW::compress(char *fileName, char *outputFile) {
     // Read the uncompressed file.
@@ -45,17 +57,24 @@ void LZW::compress(char *fileName, char *outputFile) {
             // Here we have static LZW so we can choose how many bits we output.
             // Also add the currentString plus one Byte to the dictionary if is not full.
         else {
-            outfile << bitset<STATIC_BITS>(dictionary[currentString]);
-            if(dictSize != exp2(static_cast<double>(STATIC_BITS))) dictionary[currentStringAndByte] = dictSize++;
-
+            // Make sure we writem minimum number of bits to output file.
+            // log2(dictsize) bits.
+            auto bitsToWrite = static_cast<int>(ceil(log2(dictSize)));
+            // Convert to bitRepresentation.
+            vector<int> bitRepresentation = convertToBits(dictionary[currentString]);
+            outfile << convertToString(bitsToWrite, bitRepresentation);
+            // Write to output file and add to dictionary.
+            dictionary[currentStringAndByte] = dictSize++;
             // Set currentString to the last reed byte.
             currentString = string(1, byte);
         }
     }
 
-    // Output the code for w.
-    if (!currentString.empty())
-        outfile << bitset<STATIC_BITS>(dictionary[currentString]);
+    if (!currentString.empty()){
+        auto bitsToWrite = static_cast<int>(ceil(log2(dictSize)));
+        vector<int> bitRepresentation = convertToBits(dictionary[currentString]);
+        outfile << convertToString(bitsToWrite, bitRepresentation);
+    }
 
     // Close the file
     outfile.close();
@@ -77,7 +96,19 @@ void LZW::compress(char *fileName, char *outputFile) {
     cout << "Space Savings: " << (1 - compressionRatio) * 100 << "%" << endl;
 }
 
+string LZW::convertToString(int bitsToWrite, const vector<int> &bitRepresentation) const {
+    string res = "";
+    for (int j = 0; j < bitsToWrite; ++j) {
+                if(j > bitRepresentation.size()-1) res = "0" + res;
+                else res.append(to_string(bitRepresentation[j]));
+            }
+    return res;
+}
+
+
 void LZW::decompress(char *fileName, char *outputFile) {
+
+    /*
     // Read the compressed file.
     Frequency freq;
     vector<unsigned int> compressed = freq.readFile(fileName);
@@ -131,5 +162,7 @@ void LZW::decompress(char *fileName, char *outputFile) {
     outfile.open(outputFile, ios::app | ios::binary);
     outfile << result;
     outfile.close();
-}
 
+
+     */
+}
