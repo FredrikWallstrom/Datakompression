@@ -43,29 +43,30 @@ void LZW::compress(char *fileName, char *outputFile) {
     map<string, int> dictionary;
     for (int i = 0; i < 256; i++) dictionary[string(1, i)] = i;
 
-    // This is the main compression algorithm.
+
+    // Main compression algorithm.
     string currentString;
     for (unsigned int i : uncompressed) {
         auto byte = static_cast<char>(i);
         string currentStringAndByte = currentString + byte;
 
-        // If currentString plus one Byte exists in the dictionary already, set currentString to that string.
-        if (dictionary.find(currentStringAndByte) != dictionary.end()){
+
+        if (dictionary.find(currentStringAndByte) != dictionary.end()) {
+
+            // If currentString plus one byte exists in the dictionary already, set currentString to that string.
+            // Repeat the compression to check if we can find something better i we add another byte.
+
             currentString = currentStringAndByte;
         }
-            // If currentString plus ont Byte don't exists in the dictionary. Output corresponding bits of the value to output.
-            // Here we have static LZW so we can choose how many bits we output.
-            // Also add the currentString plus one Byte to the dictionary if is not full.
         else {
-            // Make sure we writem minimum number of bits to output file.
-            // log2(dictsize) bits.
+
+            // If currentString plus one byte don't exists in the dictionary, we add currentString plus one to the dictionary.
+            // And we start over the compression by set currentString to the last reed byte.
+
             auto bitsToWrite = static_cast<int>(ceil(log2(dictSize)));
-            // Convert to bitRepresentation.
             vector<int> bitRepresentation = convertToBits(dictionary[currentString]);
             outfile << convertToString(bitsToWrite, bitRepresentation);
-            // Write to output file and add to dictionary.
             dictionary[currentStringAndByte] = dictSize++;
-            // Set currentString to the last reed byte.
             currentString = string(1, byte);
         }
     }
@@ -76,10 +77,7 @@ void LZW::compress(char *fileName, char *outputFile) {
         outfile << convertToString(bitsToWrite, bitRepresentation);
     }
 
-    // Close the file
     outfile.close();
-
-    // Open the compressed file.
     ifstream compressedFile;
     compressedFile.open(outputFile, ios::in | ios::binary | ios::ate);
 
@@ -94,12 +92,13 @@ void LZW::compress(char *fileName, char *outputFile) {
     cout << "The size of the LZW compressed file is:" << endl;
     cout << compressedFileSize << " Bits" << endl;
     cout << "Space Savings: " << (1 - compressionRatio) * 100 << "%" << endl;
+    cout << "Rate: " << compressedFileSize/uncompressed.size() << " Bits/Symbol" << endl;
 }
 
 string LZW::convertToString(int bitsToWrite, const vector<int> &bitRepresentation) const {
-    string res = "";
+    string res;
     for (int j = 0; j < bitsToWrite; ++j) {
-                if(j > bitRepresentation.size()-1) res = "0" + res;
+                if(j >= bitRepresentation.size()) res = "0" + res;
                 else res.append(to_string(bitRepresentation[j]));
             }
     return res;
@@ -107,8 +106,6 @@ string LZW::convertToString(int bitsToWrite, const vector<int> &bitRepresentatio
 
 
 void LZW::decompress(char *fileName, char *outputFile) {
-
-    /*
     // Read the compressed file.
     Frequency freq;
     vector<unsigned int> compressed = freq.readFile(fileName);
@@ -122,9 +119,12 @@ void LZW::decompress(char *fileName, char *outputFile) {
     string byte;
     int currentPosition = 0;
     int loop = 0;
-    while(loop++ < STATIC_BITS){
+    while(loop++ < static_cast<int>(ceil(log2(dictSize)))){
         byte += compressed[currentPosition++];
     }
+
+    // Need to adjust the dictionary size here because we gonna read log(dictSize) number of bits.
+    dictSize++;
 
     // Convert the byte string "10101001010101" to corresponding integer.
     string prev(1, stoi(byte, nullptr, 2));
@@ -137,7 +137,7 @@ void LZW::decompress(char *fileName, char *outputFile) {
         // Read a byte from the compression file.
         byte = "";
         loop = 0;
-        while(loop++ < STATIC_BITS){
+        while(loop++ < static_cast<int>(ceil(log2(dictSize)))){
             byte += compressed[currentPosition++];
         }
 
@@ -145,24 +145,21 @@ void LZW::decompress(char *fileName, char *outputFile) {
         int curr = stoi(byte, nullptr, 2);
 
         // When we coding one symbol, prev, we know that prev is a prefix of the current symbol, curr.
-        // Therefore we add prev + entry[0] to the dictionary.
+        // Therefore we add previous symbol + the first symbol of current symbol to the dictionary.
+        // The else if statement is when current symbol is a reference to itself.
+        // Then entry is previous + first symbol of previous.
         // So we always build the dictionary up for possible combinations.
-        // The entry is either the corresponding string in dictionary if the symbol exists.
-        // Or it is the previous string plus the first symbol in previous.
-        if (dictionary.count(curr)) entry = dictionary[curr];
-        else if (curr == dictSize) entry = prev + prev[0];
+        if (dictionary.find(curr) != dictionary.end()) entry = dictionary[curr];
+        else if (curr == dictSize-1) entry = prev + prev[0];
+
         result += entry;
-        if(dictSize != exp2(static_cast<double>(STATIC_BITS))) dictionary[dictSize++] = prev + entry[0];
+        dictionary[dictSize++ - 1] = prev + entry[0];
         prev = entry;
 
     }
-
     // Open the output file and write the result.
     ofstream outfile;
     outfile.open(outputFile, ios::app | ios::binary);
     outfile << result;
     outfile.close();
-
-
-     */
 }

@@ -26,8 +26,15 @@ public:
 
 private:
 
+    /**
+     * Convert a integer to the binary representation of that number.
+     */
     vector<int> convertToBits(int x);
 
+    /**
+     * Convert bitRepresentation of an integer to a string.
+     * If bitsToWrite is greater than the size of the bitRepresentation, we just append 0:s in the beginnning.
+     */
     string convertToString(int bitsToWrite, const vector<int> &bitRepresentation) const;
 };
 
