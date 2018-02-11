@@ -15,7 +15,7 @@
 
 using namespace std;
 
-// Compare operator that makes sure that the lowest probability has highest priority.
+// Compare operator that makes sure that the lowest frequency has highest priority.
 struct nodeComp{
     bool operator()(Node *n1, Node *n2){
         return n1->freq > n2->freq;
