@@ -78,7 +78,7 @@ private:
     /**
      * This function is only used to print the results, how much we can compress and the rate. Used for the report.
      */
-    void writeResult(char *fileName, char *outputFile, size_t length, string &encodedStringOneSymbol, double rateOneSymbol, string header);
+    void writeResult(char *fileName, size_t length, string &encodedStringOneSymbol, double rateOneSymbol, string header);
 
     /**
      * Self descripted, reads the header and return the frequency table as a map.

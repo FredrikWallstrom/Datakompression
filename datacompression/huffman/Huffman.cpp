@@ -212,10 +212,10 @@ void Huffman::compress(char *fileName, char *outputFile) {
     // Write the result as string to the output file.
     writeToFile(outputFile, encodedFile, header);
 
-   // Only using this for the report. Show the rate and how much we can compress a single file.
-   // map<BYTE, double> probabilityTable = freq.calculateProbability(freqTable, fileLength);
-   // double rate = calculateAverageNumberOfBitsPerCodeword(encodingMap, probabilityTable);
-   // writeResult(fileName, outputFile, fileLength, encodedFile, rate, header);
+   // Only using to print the result in the console.
+    map<BYTE, double> probabilityTable = freq.calculateProbability(freqTable, fileLength);
+    double rate = calculateAverageNumberOfBitsPerCodeword(encodingMap, probabilityTable);
+    writeResult(fileName, fileLength, encodedFile, rate, header);
 }
 
 
@@ -254,21 +254,19 @@ void Huffman::decompress(char *fileName, char *outputFile){
     outfile.close();
 }
 
-void Huffman::writeResult(char* fileName, char* outputFile, size_t length, string &encodedStringOneSymbol, double rateOneSymbol, string header){
+void Huffman::writeResult(char* fileName, size_t length, string &encodedStringOneSymbol, double rateOneSymbol, string header){
     auto lengthBit = static_cast<double>(length*8);
     auto lengthEncodedString = static_cast<double>(encodedStringOneSymbol.size());
     auto lengthHeader = static_cast<double>(header.size()*8);
     double lengthHuffmanCode = lengthHeader+lengthEncodedString;
-    ofstream outfile;
-    outfile.open(outputFile, std::ios_base::app);
-    outfile << "The file size of " << fileName  << " " <<  "is:" << endl;
-    outfile << length << " " << "Bytes = " << lengthBit << " Bits." << endl;
-    outfile << "Huffman coding with 1 symbols at a time:" << endl;
-    outfile << "Length: " << lengthHuffmanCode << " Bits" << endl;
-    outfile << "Compression rate: " << (1 - lengthHuffmanCode/lengthBit) * 100 << "%" << endl;
-    outfile << "Rate: " << rateOneSymbol << " Bits/Symbol" << endl;
-    outfile << endl;
-    outfile.close();
+
+    cout << "The file size of " << fileName  << " " <<  "is:" << endl;
+    cout << length << " " << "Bytes = " << lengthBit << " Bits." << endl;
+    cout << "Huffman coding with 1 symbols at a time:" << endl;
+    cout << "Length: " << lengthHuffmanCode << " Bits" << endl;
+    cout << "Compression rate: " << (1 - lengthHuffmanCode/lengthBit) * 100 << "%" << endl;
+    cout << "Rate: " << rateOneSymbol << " Bits/Symbol" << endl;
+
 }
 
 
