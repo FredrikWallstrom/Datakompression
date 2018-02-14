@@ -30,19 +30,14 @@
 %% 
 %%% Code:
 
-\chapter{Conclusion}
+\chapter{Slutsats}
 \label{cha:conclusion}
 
-This chapter contains a summarization of the purpose and the research
-questions. To what extent has the aim been achieved, and what are the
-answers to the research questions?
+Både Huffman-kodning och LZW-kodning är bra metoder för komprimering av data. De båda har sina fördelar respektive nackdelar. Nästan i alla fall kan vi komprimera filen mer om vi använder LZW-kodning istället för Huffman-kodning. Det beror på att med Huffman-kodning måste vi sparar frekvenstabellen, vilket tar extra plats i den kodade filen. Den främsta anledningen är dock att i min implementation av Huffman-kodningen kodar vi bara en symbol i taget och tar inte hänsyn till källans minne av symboler, vilket vi gör i LZW-kodning.
 
-The consequences for the target audience (and possibly for researchers
-and practitioners) must also be described. There should be a section
-on future work where ideas for continued work are described. If the
-conclusion chapter contains such a section, the ideas described
-therein must be concrete and well thought through.
+I varje fall med Huffman-kodning kommer vi väldigt nära entropin (optimala takten) som kan presteras då vi kodar med en symbol i taget. Så Huffman-koden presterar relativt sätt väldigt bra. I LZW-koden är takten ungefär lika med den betingade entropin då vi vet en symbol tillbaka i tiden. Detta betyder alltså att vi ungefär kodar med dubbla symboler i LZW-koden.
 
+Utifrån detta experiment är det svårt att dra slutsats om vilka filtyper som passar bättre till de olika kodningsmetoderna. Huffman-kodningen passar bra till de flesta typer av filer eftersom takten är nära entropin i alla fall av filtyper. LZW-kodning drar fördelar av återupprepning av symboler, vilket betyder att den presterar bäst på filer med upprepade symboler. Det kan vara både txt-, gif- eller pngfiler.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% lorem.tex ends here
